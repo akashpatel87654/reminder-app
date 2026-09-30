@@ -9,8 +9,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | T3 Subscription CRUD | done | 7983d42 | List (sorted, due badges, red ≤2d), add/edit form at `sub/[id]` (`new` = create), long-press → cancel/reactivate/delete; RLS own-rows |
 | T4 Home summary | done | e0b8493 | Per-currency /mo + /yr totals (no FX); excludes free trials, one-time, cancelled; next-7-days line |
 | T5 Local push reminders | done | 9490a3a | Full resync on every list load (cancel all → reschedule); past-due fires once (handled keys in localStorage); iOS cap 60 soonest; tap → sub; sign-out clears |
-| T6 Auto-roll dates | done | — | `roll_due_dates()` SQL: app RPC before every list load + hourly pg_cron; trial→auto_renew on roll; one_time never rolls |
-| T7 Email reminders | todo | | |
+| T6 Auto-roll dates | done | ec30d2e | `roll_due_dates()` SQL: app RPC before every list load + hourly pg_cron; trial→auto_renew on roll; one_time never rolls |
+| T7 Email reminders | done | — | `claim_email_reminders()` SQL (insert into log = lock + dedupe) → `send-reminders` edge fn → Resend; failed send releases claim; HMAC one-click unsubscribe; cron every 15 min |
 | T8 Settings | todo | | |
 | T9 Release | todo | | |
 
@@ -21,7 +21,10 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - Design pending from owner; screens use plain RN styles until it lands.
 
 ## Needs owner
-- Supabase project: fill `.env` from `.env.example`, run `supabase/migrations/*.sql`.
+- Supabase project: fill `.env` from `.env.example`, run `supabase/migrations/*.sql` in order.
+- Enable extensions `pg_cron` + `pg_net`; add Vault secrets `project_url`, `cron_secret` (see 0003_cron.sql).
+- Deploy email function: `supabase functions deploy send-reminders` and set secrets
+  `CRON_SECRET` (= vault cron_secret), `RESEND_API_KEY`, `EMAIL_FROM` (e.g. `SubTrack <reminders@yourdomain>`, domain verified in Resend).
 - Supabase Auth → Email Templates → "Magic Link" must include `{{ .Token }}` so users get a 6-digit code (app verifies codes, no deep links).
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
 - No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.

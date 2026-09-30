@@ -1,0 +1,4 @@
+# Unsubscribe links are opened from mail clients without a Supabase JWT;
+# the function checks its own CRON_SECRET / HMAC instead.
+[functions.send-reminders]
+verify_jwt = false
