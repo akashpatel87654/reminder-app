@@ -11,8 +11,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | T5 Local push reminders | done | 9490a3a | Full resync on every list load (cancel all → reschedule); past-due fires once (handled keys in localStorage); iOS cap 60 soonest; tap → sub; sign-out clears |
 | T6 Auto-roll dates | done | ec30d2e | `roll_due_dates()` SQL: app RPC before every list load + hourly pg_cron; trial→auto_renew on roll; one_time never rolls |
 | T7 Email reminders | done | 8c050c0 | `claim_email_reminders()` SQL (insert into log = lock + dedupe) → `send-reminders` edge fn → Resend; failed send releases claim; HMAC one-click unsubscribe; cron every 15 min |
-| T8 Settings | done | — | Reminder hour, default days/currency (prefill new subs), global email toggle, CSV via native share sheet, `delete_account()` RPC, logout |
-| T9 Release | todo | | |
+| T8 Settings | done | 7651d51 | Reminder hour, default days/currency (prefill new subs), global email toggle, CSV via native share sheet, `delete_account()` RPC, logout |
+| T9 Release | partial | — | `eas.json` (preview + production), `PRIVACY.md`, expo-doctor 21/21. Waiting on: design (icon, splash), EAS login, store accounts |
 
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
@@ -29,3 +29,4 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
 - No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
+- Release: `npx eas-cli@latest login` → `npx eas-cli@latest build --profile preview --platform all` for internal testers; host PRIVACY.md at a public URL for the store listings and fill the support email.
