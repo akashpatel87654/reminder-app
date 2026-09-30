@@ -1,5 +1,6 @@
 import type { Session } from '@supabase/supabase-js';
 import { getCalendars } from 'expo-localization';
+import * as Notifications from 'expo-notifications';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { supabase } from './supabase';
 
@@ -27,4 +28,13 @@ export const useAuth = () => useContext(AuthContext);
 function syncTimezone(userId: string) {
   const timezone = getCalendars()[0]?.timeZone;
   if (timezone) supabase.from('profiles').update({ timezone }).eq('user_id', userId).then();
+}
+
+// Next user on this device must not get this user's reminders.
+export async function signOut() {
+  await Notifications.cancelAllScheduledNotificationsAsync();
+  try {
+    localStorage.removeItem('handledReminders');
+  } catch {}
+  await supabase.auth.signOut();
 }

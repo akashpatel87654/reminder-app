@@ -1,7 +1,9 @@
-import { Link, router, useFocusEffect } from 'expo-router';
+import { Link, router, Stack, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Alert, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
+import { Alert, Button, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { daysUntil, deleteSub, listSubs, money, setStatus, TYPE_LABELS, type Subscription } from '../lib/subs';
+import { signOut } from '../lib/auth';
+import { syncReminders } from '../lib/reminders';
 import { listStyles, styles } from '../lib/styles';
 import { Summary } from '../components/Summary';
 
@@ -19,7 +21,9 @@ export default function Home() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      setSubs(await listSubs());
+      const list = await listSubs();
+      setSubs(list);
+      syncReminders(list);
     } catch (e) {
       Alert.alert('Could not load', (e as Error).message);
     } finally {
@@ -45,6 +49,7 @@ export default function Home() {
 
   return (
     <View style={styles.screen}>
+      <Stack.Screen options={{ headerRight: () => <Button title="Log out" onPress={signOut} /> }} />
       <FlatList
         data={subs}
         keyExtractor={(s) => s.id}
