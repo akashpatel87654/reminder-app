@@ -18,7 +18,7 @@ export function Calendar({ visible, value, onPick, onClose }: { visible: boolean
   const cells: (number | null)[] = [...Array(first.getDay()).fill(null), ...Array.from({ length: dim }, (_, i) => i + 1)];
 
   const nav = (label: string, d: number, disabled: boolean) => (
-    <Pressable accessibilityLabel={d < 0 ? 'Previous month' : 'Next month'} disabled={disabled} onPress={() => setOffset((o) => o + d)}
+    <Pressable accessibilityLabel={d < 0 ? 'Previous month' : 'Next month'} disabled={disabled} onPress={() => setOffset((o) => o + d)} hitSlop={4}
       style={({ pressed }) => ({ width: 42, height: 42, borderRadius: 21, borderWidth: 2.5, borderColor: C.ink, backgroundColor: C.white, alignItems: 'center', justifyContent: 'center',
         opacity: disabled ? 0.3 : 1, transform: [{ scale: pressed ? 0.85 : 1 }] })}>
       <T w={800} size={18}>{label}</T>

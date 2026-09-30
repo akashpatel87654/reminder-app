@@ -83,7 +83,7 @@ export default function SubForm() {
         </Rise>
         <View style={{ marginTop: 16, flexDirection: 'row', gap: 10, justifyContent: 'center' }}>
           {PALETTE.map((c) => (
-            <Pressable key={c} accessibilityLabel={`Color ${c}`} accessibilityState={{ selected: c === f.color }} onPress={() => set({ color: c })}
+            <Pressable key={c} accessibilityLabel={`Color ${c}`} accessibilityState={{ selected: c === f.color }} onPress={() => set({ color: c })} hitSlop={7}
               style={[{ width: 30, height: 30, borderRadius: 15, backgroundColor: c }, border(),
                 c === f.color && [{ transform: [{ scale: 1.25 }, { rotate: '-8deg' }] }, shadow(2)]]} />
           ))}

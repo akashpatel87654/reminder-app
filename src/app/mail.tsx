@@ -34,7 +34,7 @@ export default function Mail() {
   }
 
   const linkText = (label: string, onPress: () => void, hoverColor = C.purple) => (
-    <Pressable onPress={onPress}>{({ pressed }) => <T mono size={12} color={pressed ? hoverColor : C.ink} style={{ textDecorationLine: 'underline' }}>{label}</T>}</Pressable>
+    <Pressable accessibilityRole="link" onPress={onPress} hitSlop={10}>{({ pressed }) => <T mono size={12} color={pressed ? hoverColor : C.ink} style={{ textDecorationLine: 'underline' }}>{label}</T>}</Pressable>
   );
 
   return (
@@ -81,7 +81,7 @@ export default function Mail() {
             onPress={() => (s.portal_url ? Linking.openURL(s.portal_url) : router.replace({ pathname: '/sub/[id]', params: { id: s.id } }))} />
           <View style={{ marginTop: 12, flexDirection: 'row', justifyContent: 'center', gap: 6 }}>
             <T size={13}>already cancelled?</T>
-            <Pressable onPress={() => router.replace({ pathname: '/sub/[id]', params: { id: s.id } })}><T w={800} size={13} style={{ textDecorationLine: 'underline' }}>mark it in the app</T></Pressable>
+            <Pressable accessibilityRole="link" hitSlop={10} onPress={() => router.replace({ pathname: '/sub/[id]', params: { id: s.id } })}><T w={800} size={13} style={{ textDecorationLine: 'underline' }}>mark it in the app</T></Pressable>
           </View>
         </View>
         <View style={{ padding: 16, paddingHorizontal: 18, backgroundColor: C.cream, borderTopWidth: 2.5, borderColor: C.ink }}>

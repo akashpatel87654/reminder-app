@@ -111,7 +111,7 @@ export default function Login() {
           <View style={{ flex: 1 }} />
           {wait > 0
             ? <T mono size={12} style={{ textAlign: 'center' }}>didn’t get it? resend in {Math.floor(wait / 60)}:{String(wait % 60).padStart(2, '0')}</T>
-            : <Pressable onPress={sendCode} disabled={busy}><T mono size={12} style={{ textAlign: 'center', textDecorationLine: 'underline' }}>didn’t get it? resend code</T></Pressable>}
+            : <Pressable accessibilityRole="button" onPress={sendCode} disabled={busy} hitSlop={12}><T mono size={12} style={{ textAlign: 'center', textDecorationLine: 'underline' }}>didn’t get it? resend code</T></Pressable>}
         </View>
       </Screen>
     );
@@ -162,7 +162,7 @@ export default function Login() {
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
             <T mono size={12}>no passwords. ever. ✌︎</T>
             <T mono size={12}>·</T>
-            <Pressable onPress={() => router.push('/privacy')}><T mono size={12} style={{ textDecorationLine: 'underline' }}>privacy</T></Pressable>
+            <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} hitSlop={12}><T mono size={12} style={{ textDecorationLine: 'underline' }}>privacy</T></Pressable>
           </View>
         </Rise>
       </View>

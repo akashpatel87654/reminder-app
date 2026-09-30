@@ -107,7 +107,7 @@ export default function Home() {
                 <View style={[{ backgroundColor: C.white, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 }, border(2)]}>
                   <T w={700} size={13}>≈ {Math.round(convert(total, cur, 'USD') / 5.5)} iced lattes ☕</T>
                 </View>
-                <Pressable onPress={() => router.push('/stats')} style={({ pressed }) => [{ height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: C.ink, justifyContent: 'center', transform: [{ scale: pressed ? 0.9 : 1 }] }, border(2)]}>
+                <Pressable accessibilityRole="button" onPress={() => router.push('/stats')} hitSlop={6} style={({ pressed }) => [{ height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: C.ink, justifyContent: 'center', transform: [{ scale: pressed ? 0.9 : 1 }] }, border(2)]}>
                   <T w={800} size={13} color={C.lime}>breakdown →</T>
                 </Pressable>
               </View>
@@ -125,7 +125,7 @@ export default function Home() {
                 <T w={800} size={14}>{up.length}</T>
               </View>
             </View>
-            <Pressable onPress={() => router.navigate('/subs')} style={({ pressed }) => [{ height: 36, paddingHorizontal: 12, borderRadius: 999, backgroundColor: pressed ? C.pink : C.white, justifyContent: 'center' }, border(2)]}>
+            <Pressable accessibilityRole="button" onPress={() => router.navigate('/subs')} hitSlop={6} style={({ pressed }) => [{ height: 36, paddingHorizontal: 12, borderRadius: 999, backgroundColor: pressed ? C.pink : C.white, justifyContent: 'center' }, border(2)]}>
               <T w={700} size={13}>see all →</T>
             </Pressable>
           </Rise>

@@ -72,7 +72,7 @@ export default function Subs() {
         <TextInput value={search} onChangeText={(v) => { setSearch(v); setOpenRow(null); }} placeholder="search subs or categories" placeholderTextColor={C.placeholder}
           style={{ flex: 1, height: '100%', fontFamily: F[600], fontSize: 16, color: C.ink }} />
         {!!search && (
-          <Pressable accessibilityLabel="Clear search" onPress={() => setSearch('')} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center' }}>
+          <Pressable accessibilityLabel="Clear search" onPress={() => setSearch('')} hitSlop={8} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center' }}>
             <T w={800} size={16} color={C.white}>×</T>
           </Pressable>
         )}

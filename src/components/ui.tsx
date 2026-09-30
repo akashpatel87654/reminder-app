@@ -74,7 +74,7 @@ export function RoundBtn({ label = '←', onPress, bg = C.white, size = 48 }: { 
 // Toggle chip (design's chip()): black + lime when on, tilted a little.
 export function Chip({ label, on, onPress, i = 0, h = 40, size = 14 }: { label: string; on: boolean; onPress: () => void; i?: number; h?: number; size?: number }) {
   return (
-    <Pressable accessibilityRole="button" accessibilityState={{ selected: on }} onPress={onPress}
+    <Pressable accessibilityRole="button" accessibilityState={{ selected: on }} onPress={onPress} hitSlop={{ top: 6, bottom: 6 }}
       style={({ pressed }) => [{ height: h, paddingHorizontal: 15, borderRadius: 999, justifyContent: 'center', backgroundColor: on ? C.ink : C.white },
         border(), on ? shadow(3, C.pink) : shadow(2),
         { transform: [...(on ? [{ rotate: `${i % 2 ? 2 : -2}deg` }, { scale: 1.06 }] : []), ...(pressed ? [{ scale: 0.9 }] : [])] }]}>
@@ -89,7 +89,7 @@ export function Toggle({ on, onPress, label }: { on: boolean; onPress: () => voi
     Animated.spring(x, { toValue: on ? 1 : 0, useNativeDriver: false, friction: 5 }).start();
   }, [on, x]);
   return (
-    <Pressable accessibilityRole="switch" accessibilityLabel={label} accessibilityState={{ checked: on }} onPress={onPress}
+    <Pressable accessibilityRole="switch" accessibilityLabel={label} accessibilityState={{ checked: on }} onPress={onPress} hitSlop={8}
       style={[{ width: 60, height: 34, borderRadius: 999, backgroundColor: on ? C.lime : C.paper }, border()]}>
       <Animated.View style={[{ position: 'absolute', top: 2, width: 24, height: 24, borderRadius: 12, backgroundColor: C.white,
         left: x.interpolate({ inputRange: [0, 1], outputRange: [2, 28] }) }, border()]} />

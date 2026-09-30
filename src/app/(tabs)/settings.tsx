@@ -129,7 +129,7 @@ export default function Settings() {
 }
 
 const StepBtn = ({ label, a11y, onPress }: { label: string; a11y: string; onPress: () => void }) => (
-  <Pressable accessibilityRole="button" accessibilityLabel={a11y} onPress={onPress}
+  <Pressable accessibilityRole="button" accessibilityLabel={a11y} onPress={onPress} hitSlop={6}
     style={({ pressed }) => [{ width: 38, height: 38, borderRadius: 12, backgroundColor: C.white, alignItems: 'center', justifyContent: 'center' }, border(),
       pressed ? { transform: [{ scale: 0.8 }] } : shadow(2)]}>
     <T w={800} size={18}>{label}</T>
