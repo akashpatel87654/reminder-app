@@ -9,6 +9,7 @@ function RootStack() {
     <Stack>
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="index" options={{ title: 'SubTrack' }} />
+        <Stack.Screen name="sub/[id]" />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="login" options={{ headerShown: false }} />

@@ -5,8 +5,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | Task | Status | Commit | Notes |
 |------|--------|--------|-------|
 | T1 Project setup | done | ab276ac | Expo SDK 57, Expo Router (`src/app`), Supabase client w/ expo-sqlite localStorage |
-| T2 Auth | done | — | Email OTP (code, not link); profile row via `auth.users` trigger; timezone synced on sign-in; `Stack.Protected` guards |
-| T3 Subscription CRUD | todo | | |
+| T2 Auth | done | 76df0f3 | Email OTP (code, not link); profile row via `auth.users` trigger; timezone synced on sign-in; `Stack.Protected` guards |
+| T3 Subscription CRUD | done | — | List (sorted, due badges, red ≤2d), add/edit form at `sub/[id]` (`new` = create), long-press → cancel/reactivate/delete; RLS own-rows |
 | T4 Home summary | todo | | |
 | T5 Local push reminders | todo | | |
 | T6 Auto-roll dates | todo | | |
