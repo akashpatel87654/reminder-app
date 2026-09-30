@@ -19,6 +19,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 | D3 Unsubscribe on hosted Supabase | done | — | Supabase rewrites text/html GETs to text/plain without a custom domain (confirmed in their limits docs). Default now = readable plain-text confirmation (undo = in-app toggle); `PUBLIC_FUNCTION_URL` (custom domain) switches links + styled HTML page with undo. Deleted sub → 404 instead of 500. Verified vs local DB: unsub flips flag, 404 path, HTML mode, POST resub |
 
+| D4 Month-end drift | done | — | 0007: `anchor_day` (trigger sets it from user-picked dates; roll flags its own updates so it keeps it). Monthly/quarterly/yearly land on the anchor clamped to month length: Jan 31 → Feb 28 → Mar 31; Feb 29 yearly → Feb 28 off-leap. Verified in local DB incl. as `authenticated` role |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
