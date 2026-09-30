@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { getCalendars } from 'expo-localization';
 import * as Notifications from 'expo-notifications';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { Platform } from 'react-native';
 import { supabase } from './supabase';
 
 type Auth = { session: Session | null; loading: boolean };
@@ -32,9 +33,11 @@ function syncTimezone(userId: string) {
 
 // Next user on this device must not get this user's reminders.
 export async function signOut() {
-  await Notifications.cancelAllScheduledNotificationsAsync();
+  const { data } = await supabase.auth.getSession();
+  if (Platform.OS !== 'web') await Notifications.cancelAllScheduledNotificationsAsync();
   try {
     localStorage.removeItem('handledReminders');
+    if (data.session) localStorage.removeItem(`cache:${data.session.user.id}`);
   } catch {}
   await supabase.auth.signOut();
 }

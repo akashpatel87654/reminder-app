@@ -1,8 +1,7 @@
 import 'expo-sqlite/localStorage/install';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { daysUntil, money, parseDate, today, type Subscription } from './subs';
-import { supabase } from './supabase';
+import { daysUntil, money, parseDate, today, when, type Subscription } from './subs';
 
 const CHANNEL = 'reminders';
 const IOS_LIMIT = 60; // iOS keeps at most 64 pending; the rest get scheduled on a later resync.
@@ -12,26 +11,36 @@ Notifications.setNotificationHandler({
   handleNotification: async () => ({ shouldPlaySound: true, shouldSetBadge: false, shouldShowBanner: true, shouldShowList: true }),
 });
 
-export async function ensurePermission() {
+const web = Platform.OS === 'web'; // browser preview only: no local notifications there.
+
+export type NotifState = 'granted' | 'denied' | 'undetermined';
+
+export async function notifState(): Promise<{ state: NotifState; canAsk: boolean }> {
+  if (web) return { state: 'granted', canAsk: false };
+  const p = await Notifications.getPermissionsAsync();
+  return { state: p.status as NotifState, canAsk: p.canAskAgain };
+}
+
+export async function askPermission() {
+  if (web) return true;
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync(CHANNEL, { name: 'Reminders', importance: Notifications.AndroidImportance.HIGH });
   }
-  const { status } = await Notifications.getPermissionsAsync();
-  if (status === 'granted') return true;
   return (await Notifications.requestPermissionsAsync()).status === 'granted';
 }
 
-const when = (d: number) => (d === 0 ? 'today' : d === 1 ? 'tomorrow' : `in ${d} days`);
 export function reminderText(s: Subscription, d: number) {
-  const price = money(s.price, s.currency);
-  switch (s.type) {
-    case 'auto_renew':
-      return { title: `${s.name} renews ${when(d)}`, body: `${price} will be charged on ${s.next_date}. Cancel before then if you don't need it.` };
-    case 'free_trial':
-      return { title: `${s.name} trial ends ${when(d)}`, body: `${price} will be charged on ${s.next_date} unless you cancel.` };
-    case 'expires':
-      return { title: `${s.name} expires ${when(d)}`, body: `Renew before ${s.next_date} to keep access.` };
-  }
+  const w = when(d);
+  const title = s.type === 'free_trial' ? `${s.name} trial ends ${w}. cancel or commit.`
+    : s.type === 'expires' ? `${s.name} expires ${w}. renew or let it go.`
+    : `${s.name} wants ${money(s.price, s.currency)} ${w} 👀`;
+  return { title, body: 'tap to deal with it before it deals with you' };
+}
+
+// "send me a test nag": fires right now for the given sub.
+export async function testNag(s: Subscription) {
+  if (web) return;
+  await Notifications.scheduleNotificationAsync({ content: { ...reminderText(s, daysUntil(s.next_date)), data: { subId: s.id } }, trigger: null });
 }
 
 // Keys (sub:date:daysBefore) the OS already owns or we already fired, so a past-due
@@ -49,13 +58,15 @@ function loadHandled(): Set<string> {
 // cancels and deletes need no bookkeeping. Calls are serialized so two focus
 // events can't interleave cancel/schedule and double-book.
 let running = Promise.resolve();
-export const syncReminders = (subs: Subscription[]) =>
-  (running = running.then(() => sync(subs)).catch((e) => console.warn('reminder sync failed', e)));
+// `enabled` = OS permission granted and the in-app push toggle on; otherwise just clear.
+export const syncReminders = (subs: Subscription[], hour: number, enabled: boolean) =>
+  (running = running.then(() => (web ? undefined : sync(subs, hour, enabled))).catch((e) => console.warn('reminder sync failed', e)));
 
-async function sync(subs: Subscription[]) {
-  if (!(await ensurePermission())) return;
-  const { data: profile } = await supabase.from('profiles').select('reminder_hour').maybeSingle();
-  const hour = profile?.reminder_hour ?? 9;
+async function sync(subs: Subscription[], hour: number, enabled: boolean) {
+  if (!enabled) return Notifications.cancelAllScheduledNotificationsAsync();
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync(CHANNEL, { name: 'Reminders', importance: Notifications.AndroidImportance.HIGH });
+  }
   const now = Date.now();
   const handled = loadHandled();
   const future: { at: Date; s: Subscription; d: number }[] = [];
