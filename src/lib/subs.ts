@@ -53,6 +53,9 @@ export const money = (amount: number, currency: string) => {
 };
 
 export async function listSubs() {
+  // Roll past-due recurring dates first (the hourly cron does the same server-side).
+  const roll = await supabase.rpc('roll_due_dates');
+  if (roll.error) console.warn('roll_due_dates failed', roll.error.message);
   const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
