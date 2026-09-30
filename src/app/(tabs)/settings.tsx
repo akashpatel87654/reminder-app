@@ -59,7 +59,7 @@ export default function Settings() {
 
   return (
     <Screen scroll bottom={130}>
-      <Rise><T w={800} size={42} style={{ letterSpacing: -1.6, lineHeight: 44 }}>settings</T></Rise>
+      <Rise><T accessibilityRole="header" w={800} size={42} style={{ letterSpacing: -1.6, lineHeight: 44 }}>settings</T></Rise>
       <Rise delay={40}><T mono size={13} style={{ marginTop: 6 }}>tune how hard we nag you</T></Rise>
 
       <Rise delay={80} style={[{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, backgroundColor: C.pink, borderRadius: 24, transform: [{ rotate: '-1deg' }] }, border(3), shadow(5)]}>

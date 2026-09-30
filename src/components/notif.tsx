@@ -59,7 +59,7 @@ export function NotifOffSheet({ visible, onClose }: { visible: boolean; onClose:
   return (
     <Sheet visible={visible} onClose={onClose}>
       <Tile emoji="🔕" bg={C.paper} wiggle />
-      <T w={800} size={34} style={{ marginTop: 20, letterSpacing: -1.2, lineHeight: 36 }}>notifs are off</T>
+      <T accessibilityRole="header" w={800} size={34} style={{ marginTop: 20, letterSpacing: -1.2, lineHeight: 36 }}>notifs are off</T>
       <T size={16} style={{ marginTop: 10, lineHeight: 22 }}>
         {blockedByOs ? `${Platform.OS === 'ios' ? 'iOS' : 'android'} is blocking SubTrack, so we can’t ping you before charges.` : 'you switched push off, so we can’t ping you before charges.'} email reminders still work.
       </T>
@@ -112,7 +112,7 @@ export function PermSheet() {
   return (
     <Sheet visible={open} onClose={done}>
       <Tile emoji="🔔" bg={C.yellow} size={96} rot={-6} wiggle />
-      <T w={800} size={34} style={{ marginTop: 22, letterSpacing: -1.2, lineHeight: 36 }}>can we nag you?</T>
+      <T accessibilityRole="header" w={800} size={34} style={{ marginTop: 22, letterSpacing: -1.2, lineHeight: 36 }}>can we nag you?</T>
       <T size={16} style={{ marginTop: 12, lineHeight: 22 }}>one ping a couple days before anything charges. that’s it. no spam, pinky promise.</T>
       <View style={{ marginTop: 24, gap: 10 }}>
         <Btn title="yes, nag me" size={18} onPress={allow} />

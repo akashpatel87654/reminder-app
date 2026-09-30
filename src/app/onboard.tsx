@@ -51,7 +51,7 @@ export default function Onboard() {
               </Loop>
               <T mono size={13} style={{ position: 'absolute', bottom: 18, right: 22 }}>0{i + 1} / 03</T>
             </View>
-            <T w={800} size={36} style={{ marginTop: 28, lineHeight: 37, letterSpacing: -1.4 }}>{c.title}</T>
+            <T accessibilityRole="header" w={800} size={36} style={{ marginTop: 28, lineHeight: 37, letterSpacing: -1.4 }}>{c.title}</T>
             <T size={16} style={{ marginTop: 10, lineHeight: 22 }}>{c.body}</T>
           </View>
         ))}

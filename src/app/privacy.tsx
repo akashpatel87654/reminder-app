@@ -19,7 +19,7 @@ export default function Privacy() {
         <T w={800} size={22} style={{ letterSpacing: -0.5 }}>privacy</T>
         <View style={{ width: 48 }} />
       </Rise>
-      <Rise delay={40}><T w={800} size={38} style={{ marginTop: 24, letterSpacing: -1.4, lineHeight: 40 }}>privacy, in plain words</T></Rise>
+      <Rise delay={40}><T accessibilityRole="header" w={800} size={38} style={{ marginTop: 24, letterSpacing: -1.4, lineHeight: 40 }}>privacy, in plain words</T></Rise>
       <Rise delay={60}><T mono size={12} style={{ marginTop: 8 }}>last updated Sep 30, 2026</T></Rise>
       {SECTIONS.map((s, i) => (
         <Rise key={s.n} delay={100 + i * 40} style={[{ marginTop: i ? 14 : 18, padding: 16, borderRadius: 20, backgroundColor: C.white }, border(), shadow(4)]}>

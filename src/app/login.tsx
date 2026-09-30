@@ -88,10 +88,10 @@ export default function Login() {
               <T size={42}>📬</T>
             </View>
           </PopIn>
-          <Rise delay={100}><T w={800} size={40} style={{ marginTop: 24, letterSpacing: -1.5, lineHeight: 42 }}>check your inbox</T></Rise>
+          <Rise delay={100}><T accessibilityRole="header" w={800} size={40} style={{ marginTop: 24, letterSpacing: -1.5, lineHeight: 42 }}>check your inbox</T></Rise>
           <Rise delay={160}><T size={16} style={{ marginTop: 12 }}>we sent a 6-digit code to <T w={800} size={16}>{addr}</T></T></Rise>
           <Rise delay={220} style={{ marginTop: 32 }}>
-            <View style={{ flexDirection: 'row', gap: 8 }}>
+            <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: 'row', gap: 8 }}>
               {[0, 1, 2, 3, 4, 5].map((i) => {
                 const ch = otp[i] ?? '', active = i === otp.length;
                 return (
@@ -122,7 +122,7 @@ export default function Login() {
       {/* behavior="padding" owns paddingBottom, so the screen's own padding lives on the inner view. */}
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 8, paddingBottom: 36 }}>
-        <View style={{ height: kb ? 0 : 280, overflow: 'hidden' }}>
+        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: kb ? 0 : 280, overflow: 'hidden' }}>
           <Loop kind="bob" duration={3200} style={{ position: 'absolute', left: 0, top: 24 }}>
             <View style={[{ width: 118, height: 118, borderRadius: 59, backgroundColor: C.pink, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-10deg' }] }, border(3), shadow(5)]}><T w={800} size={56}>N</T></View>
           </Loop>

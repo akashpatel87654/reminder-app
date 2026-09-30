@@ -57,7 +57,7 @@ export default function Subs() {
     <Screen scroll bottom={130}>
       <Rise style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <View>
-          <T w={800} size={42} style={{ letterSpacing: -1.6, lineHeight: 44 }}>your subs</T>
+          <T accessibilityRole="header" w={800} size={42} style={{ letterSpacing: -1.6, lineHeight: 44 }}>your subs</T>
           <T mono size={13} style={{ marginTop: 6 }}>monthly burn · {money(subs.reduce((a, s) => a + toMonthly(s, cur), 0), cur)}</T>
         </View>
         <Loop kind="floaty" duration={2400}>
@@ -133,7 +133,9 @@ function SwipeRow({ sub: s, open, onOpen, onCancel, onDelete }: { sub: Subscript
   const active = s.status === 'active';
   return (
     <View style={{ marginBottom: 14 }}>
-      <View style={{ position: 'absolute', top: 0, bottom: 4, right: 0, flexDirection: 'row', gap: 8 }}>
+      {/* Hidden from screen readers until swiped open; they use the row's actions instead. */}
+      <View accessibilityElementsHidden={!open} importantForAccessibility={open ? 'auto' : 'no-hide-descendants'}
+        style={{ position: 'absolute', top: 0, bottom: 4, right: 0, flexDirection: 'row', gap: 8 }}>
         <Pressable onPress={onCancel} style={({ pressed }) => [{ width: 76, borderRadius: 18, backgroundColor: C.yellow, alignItems: 'center', justifyContent: 'center', transform: [{ scale: pressed ? 0.9 : 1 }] }, border()]}>
           <T w={800} size={13}>{active ? 'cancel' : 'revive'}</T>
         </Pressable>
@@ -142,7 +144,10 @@ function SwipeRow({ sub: s, open, onOpen, onCancel, onDelete }: { sub: Subscript
         </Pressable>
       </View>
       <Animated.View {...pan.panHandlers} style={{ transform: [{ translateX: x }] }}>
-        <Pressable accessibilityHint="Swipe left for cancel and delete"
+        <Pressable accessibilityRole="button" accessibilityLabel={`${s.name}, ${kind(s)} ${priceLabel(s)}, ${b.text}`}
+          accessibilityHint="Opens details. Swipe left, or use actions, to cancel or delete."
+          accessibilityActions={[{ name: 'cancel', label: active ? 'Cancel' : 'Revive' }, { name: 'delete', label: 'Delete' }]}
+          onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'delete' ? onDelete() : onCancel())}
           onPress={() => {
             if (dragged.current) return;
             if (open) onOpen(false);

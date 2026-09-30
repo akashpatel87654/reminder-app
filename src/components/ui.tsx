@@ -124,13 +124,16 @@ export const Divider = () => <View style={{ height: 2, backgroundColor: C.ink, o
 // ---- motion -------------------------------------------------------------
 
 // Entrance: fade + rise + slight scale-up, like the design's `rise` keyframe.
-export function Rise({ delay = 0, children, style }: { delay?: number; children: ReactNode; style?: StyleProp<ViewStyle> }) {
+const hide = (h?: boolean) => (h ? { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' as const } : {});
+
+// `hidden`: purely decorative, skipped by screen readers.
+export function Rise({ delay = 0, children, style, hidden }: { delay?: number; children: ReactNode; style?: StyleProp<ViewStyle>; hidden?: boolean }) {
   const v = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(v, { toValue: 1, duration: 500, delay, easing: Easing.bezier(0.2, 1.3, 0.4, 1), useNativeDriver: true }).start();
   }, [v, delay]);
   return (
-    <Animated.View style={[style, {
+    <Animated.View {...hide(hidden)} style={[style, {
       opacity: v.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, 1, 1] }),
       transform: [{ translateY: v.interpolate({ inputRange: [0, 1], outputRange: [26, 0] }) }, { scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1] }) }],
     }]}>{children}</Animated.View>
@@ -148,7 +151,7 @@ export function PopIn({ delay = 0, children, style }: { delay?: number; children
 type LoopKind = 'bob' | 'floaty' | 'spin' | 'wiggle' | 'pulse' | 'nudge';
 
 // Infinite decorative loops: bob, floaty, spin, wiggle, pulse, nudge.
-export function Loop({ kind, duration = 3000, delay = 0, children, style }: { kind: LoopKind; duration?: number; delay?: number; children: ReactNode; style?: StyleProp<ViewStyle> }) {
+export function Loop({ kind, duration = 3000, delay = 0, children, style, hidden }: { kind: LoopKind; duration?: number; delay?: number; children: ReactNode; style?: StyleProp<ViewStyle>; hidden?: boolean }) {
   const v = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     const anim = Animated.loop(Animated.timing(v, { toValue: 1, duration, easing: kind === 'spin' ? Easing.linear : Easing.inOut(Easing.ease), useNativeDriver: true }));
@@ -163,5 +166,5 @@ export function Loop({ kind, duration = 3000, delay = 0, children, style }: { ki
     : kind === 'pulse' ? [{ scale: v.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 1.12, 1] }) }]
     : kind === 'spin' ? [{ rotate: v.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }]
     : [{ rotate: v.interpolate({ inputRange: [0, 0.8, 0.84, 0.88, 0.92, 0.96, 1], outputRange: ['0deg', '0deg', '-16deg', '14deg', '-10deg', '6deg', '0deg'] }) }];
-  return <Animated.View style={[style, { transform }]}>{children}</Animated.View>;
+  return <Animated.View {...hide(hidden)} style={[style, { transform }]}>{children}</Animated.View>;
 }

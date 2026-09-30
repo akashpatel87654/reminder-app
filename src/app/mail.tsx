@@ -45,7 +45,7 @@ export default function Mail() {
         <T mono size={12}>preview</T>
       </View>
       <Rise style={{ paddingHorizontal: 18, paddingTop: 16 }}>
-        <T w={800} size={22} style={{ lineHeight: 25, letterSpacing: -0.5 }}>{subject}</T>
+        <T accessibilityRole="header" w={800} size={22} style={{ lineHeight: 25, letterSpacing: -0.5 }}>{subject}</T>
         <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <View style={[{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.lime, alignItems: 'center', justifyContent: 'center' }, border()]}><T w={800} size={18}>S</T></View>
           <View>

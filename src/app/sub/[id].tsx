@@ -60,7 +60,7 @@ export default function Detail() {
               <T w={800} size={13} color={C.lime}>{active ? TYPES.find((t) => t[0] === d.type)![1] : 'cancelled'}</T>
             </View>
           </View>
-          <T w={800} size={36} style={{ marginTop: 16, letterSpacing: -1.2, lineHeight: 38 }}>{d.name}</T>
+          <T accessibilityRole="header" w={800} size={36} style={{ marginTop: 16, letterSpacing: -1.2, lineHeight: 38 }}>{d.name}</T>
           <T mono={500} size={18} style={{ marginTop: 6 }}>{priceLabel(d)}</T>
         </View>
       </PopIn>

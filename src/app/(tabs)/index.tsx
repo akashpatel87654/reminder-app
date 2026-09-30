@@ -59,7 +59,7 @@ export default function Home() {
             <T w={800} size={22} style={{ letterSpacing: -0.5 }}>{userName}</T>
           </View>
         </View>
-        <Pressable accessibilityLabel="Send a test reminder" onPress={testPush}
+        <Pressable accessibilityRole="button" accessibilityLabel={`Send a test reminder. ${up.length} due this week`} onPress={testPush}
           style={({ pressed }) => [{ width: 48, height: 48, borderRadius: 16, backgroundColor: C.white, alignItems: 'center', justifyContent: 'center' }, border(),
             pressed ? { transform: [{ translateX: 3 }, { translateY: 3 }] } : shadow(3)]}>
           <Loop kind="wiggle"><T size={22}>🔔</T></Loop>
@@ -77,7 +77,7 @@ export default function Home() {
               <Loop kind="wiggle" duration={2400}><T size={17}>🔕</T></Loop>
             </View>
             <View style={{ flex: 1 }}>
-              <T w={800} size={15}>notifs are off 😬</T>
+              <T accessibilityRole="header" w={800} size={15}>notifs are off 😬</T>
               <T size={13}>you might miss a charge</T>
             </View>
             <View style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: C.ink }}><T w={800} size={13} color={C.lime}>fix it</T></View>
@@ -96,7 +96,7 @@ export default function Home() {
         <>
           <Rise delay={60}>
             <View style={[{ marginTop: 22, backgroundColor: C.lime, borderRadius: 28, padding: 20, paddingTop: 18, transform: [{ rotate: '-1.2deg' }] }, border(3), shadow(6)]}>
-              <Loop kind="spin" duration={7000} style={{ position: 'absolute', top: -20, right: 18 }}>
+              <Loop kind="spin" duration={7000} style={{ position: 'absolute', top: -20, right: 18 }} hidden>
                 <View style={[{ width: 62, height: 62, borderRadius: 31, backgroundColor: C.pink, alignItems: 'center', justifyContent: 'center' }, border(3)]}><T size={30}>✦</T></View>
               </Loop>
               <PeriodToggle period={period} onChange={setPeriod} />
@@ -120,7 +120,7 @@ export default function Home() {
 
           <Rise delay={160} style={{ marginTop: 28, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-              <T w={800} size={26} style={{ letterSpacing: -0.8 }}>next 7 days</T>
+              <T accessibilityRole="header" w={800} size={26} style={{ letterSpacing: -0.8 }}>next 7 days</T>
               <View style={[{ width: 30, height: 30, borderRadius: 15, backgroundColor: C.yellow, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '8deg' }] }, border()]}>
                 <T w={800} size={14}>{up.length}</T>
               </View>
@@ -135,7 +135,8 @@ export default function Home() {
               const b = badge(s);
               return (
                 <Rise key={s.id} delay={200 + i * 80}>
-                  <Pressable onPress={() => router.push({ pathname: '/sub/[id]', params: { id: s.id } })}
+                  <Pressable accessibilityRole="button" accessibilityLabel={`${s.name}, ${kind(s)} ${b.text}, ${priceLabel(s)}`}
+                    onPress={() => router.push({ pathname: '/sub/[id]', params: { id: s.id } })}
                     style={({ pressed }) => [{ width: 168, height: 200, backgroundColor: s.color, borderRadius: 26, padding: 14, justifyContent: 'space-between',
                       transform: pressed ? [{ scale: 0.93 }] : [{ rotate: `${TILT[i % 6]}deg` }] }, border(3), pressed ? {} : shadow(5)]}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -184,14 +185,14 @@ function PeriodToggle({ period, onChange }: { period: 'mo' | 'yr'; onChange: (p:
 function Empty() {
   return (
     <View style={{ marginTop: 28, alignItems: 'center' }}>
-      <Rise delay={60} style={{ width: 260, height: 220 }}>
+      <Rise delay={60} style={{ width: 260, height: 220 }} hidden>
         <View style={{ position: 'absolute', left: 14, top: 24, width: 160, height: 170, borderWidth: 3, borderStyle: 'dashed', borderColor: C.ink, borderRadius: 28, transform: [{ rotate: '-12deg' }] }} />
         <View style={{ position: 'absolute', left: 90, top: 8, width: 160, height: 170, borderWidth: 3, borderStyle: 'dashed', borderColor: C.ink, borderRadius: 28, backgroundColor: C.white, transform: [{ rotate: '9deg' }] }} />
         <View style={[{ position: 'absolute', left: 50, top: 30, width: 160, height: 170, borderRadius: 28, backgroundColor: C.pink, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-2deg' }] }, border(3), shadow(6)]}>
           <Loop kind="bob" duration={2600}><T w={800} size={88}>?</T></Loop>
         </View>
       </Rise>
-      <Rise delay={120}><T w={800} size={34} style={{ marginTop: 22, letterSpacing: -1.2, textAlign: 'center' }}>zero subs. suspicious.</T></Rise>
+      <Rise delay={120}><T accessibilityRole="header" w={800} size={34} style={{ marginTop: 22, letterSpacing: -1.2, textAlign: 'center' }}>zero subs. suspicious.</T></Rise>
       <Rise delay={160}><T size={16} style={{ marginTop: 10, maxWidth: 290, lineHeight: 22, textAlign: 'center' }}>add your first one and we’ll start counting what you spend.</T></Rise>
       <Rise delay={200} style={{ marginTop: 24, alignSelf: 'stretch' }}>
         <Btn title="add your first sub +" size={18} onPress={() => router.push('/sub/form')} />

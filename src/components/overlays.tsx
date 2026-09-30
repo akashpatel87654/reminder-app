@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Animated, Dimensions, Easing, Modal, Pressable, View } from 'react-native';
+import { AccessibilityInfo, Animated, Dimensions, Easing, Modal, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { border, C, PALETTE, shadow } from '../theme';
 import { Btn, Loop, PopIn, T } from './ui';
@@ -20,6 +20,7 @@ export function FxProvider({ children }: { children: ReactNode }) {
   const toast = useCallback((text: string) => {
     clearTimeout(timer.current);
     setMsg({ text, key: Date.now() });
+    AccessibilityInfo.announceForAccessibility(text);
     timer.current = setTimeout(() => setMsg(null), 2600);
   }, []);
   const confetti = useCallback(() => setBurst(Date.now()), []);
@@ -131,7 +132,7 @@ export function Marquee({ text }: { text: string }) {
     return () => a.stop();
   }, [w, x]);
   return (
-    <View style={{ marginHorizontal: -24, marginTop: 30, backgroundColor: C.ink, paddingVertical: 12, overflow: 'hidden', transform: [{ rotate: '1.6deg' }] }}>
+    <View accessible accessibilityLabel={text.replace(/\s*✦\s*/g, '. ')} style={{ marginHorizontal: -24, marginTop: 30, backgroundColor: C.ink, paddingVertical: 12, overflow: 'hidden', transform: [{ rotate: '1.6deg' }] }}>
       <Animated.View style={{ flexDirection: 'row', width: 10000, transform: [{ translateX: x }] }}>
         <View onLayout={(e) => setW(e.nativeEvent.layout.width)} style={{ flexDirection: 'row' }}>
           <T mono={500} size={13} color={C.lime} style={{ paddingRight: 24 }}>{text}</T>
@@ -149,7 +150,7 @@ export function ErrorView({ onRetry, onBack }: { onRetry: () => void; onBack?: (
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 28, backgroundColor: C.cream }}>
       <PopIn><Tile emoji="📡" bg={C.orange} size={120} wiggle /></PopIn>
-      <T w={800} size={40} style={{ marginTop: 28, letterSpacing: -1.5, lineHeight: 42 }}>no signal, no magic</T>
+      <T accessibilityRole="header" w={800} size={40} style={{ marginTop: 28, letterSpacing: -1.5, lineHeight: 42 }}>no signal, no magic</T>
       <T size={17} style={{ marginTop: 12, lineHeight: 24 }}>we couldn’t reach our servers. check your wifi or data, then try again.</T>
       <View style={{ marginTop: 28, gap: 12 }}>
         <Btn title="try again ↻" onPress={onRetry} />

@@ -35,7 +35,7 @@ export default function Stats() {
     <Screen scroll>
       <Rise style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <RoundBtn />
-        <T w={800} size={22} style={{ letterSpacing: -0.5 }}>where it goes</T>
+        <T accessibilityRole="header" w={800} size={22} style={{ letterSpacing: -0.5 }}>where it goes</T>
         <View style={{ width: 48 }} />
       </Rise>
       <Rise delay={50}><T mono size={13} style={{ marginTop: 24 }}>monthly burn</T></Rise>

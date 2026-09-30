@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { daysUntil, formatDate, parseDate, today } from '../lib/subs';
+import { daysUntil, fmtDay, formatDate, parseDate, today } from '../lib/subs';
 import { C } from '../theme';
 import { Sheet } from './overlays';
 import { T } from './ui';
@@ -42,7 +42,7 @@ export function Calendar({ visible, value, onPick, onClose }: { visible: boolean
           const n = daysUntil(iso), picked = iso === value, past = n < 0;
           return (
             <View key={iso} style={{ width: `${100 / 7}%`, paddingHorizontal: 3 }}>
-              <Pressable accessibilityLabel={iso} accessibilityState={{ selected: picked, disabled: past }} disabled={past}
+              <Pressable accessibilityRole="button" accessibilityLabel={fmtDay(iso)} accessibilityState={{ selected: picked, disabled: past }} disabled={past}
                 onPress={() => { onPick(iso); setTimeout(onClose, 280); }}
                 style={({ pressed }) => ({ height: 44, borderRadius: 14, borderWidth: 2, alignItems: 'center', justifyContent: 'center',
                   borderColor: picked || n === 0 ? C.ink : '#14141433', backgroundColor: picked ? C.pink : n === 0 ? C.lime : C.white, opacity: past ? 0.3 : 1,

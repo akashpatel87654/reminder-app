@@ -69,7 +69,7 @@ export default function SubForm() {
         contentContainerStyle={{ paddingTop: insets.top + 10, paddingHorizontal: 20, paddingBottom: 24 }}>
         <Rise style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <RoundBtn />
-          <T w={800} size={22} style={{ letterSpacing: -0.5 }}>{existing ? 'edit sub' : 'new sub'}</T>
+          <T accessibilityRole="header" w={800} size={22} style={{ letterSpacing: -0.5 }}>{existing ? 'edit sub' : 'new sub'}</T>
           <View style={{ width: 48 }} />
         </Rise>
 
