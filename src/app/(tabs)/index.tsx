@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { ErrorView, Marquee } from '../../components/overlays';
 import { NotifOffSheet, PermSheet, usePushOff, useTestNag } from '../../components/notif';
 import { Screen } from '../../components/Screen';
-import { Btn, Letter, Loop, Pill, Rise, T } from '../../components/ui';
+import { Btn, Letter, Loop, Pill, Rise, T, useReduceMotion } from '../../components/ui';
 import { useStore } from '../../lib/store';
 import { badge, convert, kind, money, priceLabel, toMonthly, upcoming } from '../../lib/subs';
 import { border, C, shadow, TILT } from '../../theme';
@@ -13,7 +13,12 @@ import { border, C, shadow, TILT } from '../../theme';
 function useCountUp(to: number) {
   const [shown, setShown] = useState(0);
   const from = useRef(0);
+  const still = useReduceMotion();
   useEffect(() => {
+    if (still) {
+      from.current = to;
+      return setShown(to);
+    }
     const start = from.current, t0 = Date.now();
     let raf = 0;
     const step = () => {
@@ -24,7 +29,7 @@ function useCountUp(to: number) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [to]);
+  }, [to, still]);
   return shown;
 }
 

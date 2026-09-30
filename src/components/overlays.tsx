@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { AccessibilityInfo, Animated, Dimensions, Easing, Modal, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { border, C, PALETTE, shadow } from '../theme';
-import { Btn, Loop, PopIn, T } from './ui';
+import { Btn, Loop, PopIn, reduceMotionNow, T, useReduceMotion } from './ui';
 
 // ---- toast + confetti ---------------------------------------------------
 
@@ -23,7 +23,7 @@ export function FxProvider({ children }: { children: ReactNode }) {
     AccessibilityInfo.announceForAccessibility(text);
     timer.current = setTimeout(() => setMsg(null), 2600);
   }, []);
-  const confetti = useCallback(() => setBurst(Date.now()), []);
+  const confetti = useCallback(() => { if (!reduceMotionNow()) setBurst(Date.now()); }, []);
 
   return (
     <FxContext.Provider value={{ toast, confetti, setToastLift }}>
@@ -124,13 +124,14 @@ export function Confirm({ visible, title, body, yes, onYes, onClose }: { visible
 export function Marquee({ text }: { text: string }) {
   const [w, setW] = useState(0);
   const x = useRef(new Animated.Value(0)).current;
+  const still = useReduceMotion();
   useEffect(() => {
-    if (!w) return;
+    if (!w || still) return x.setValue(0);
     x.setValue(0);
     const a = Animated.loop(Animated.timing(x, { toValue: -w, duration: w * 22, easing: Easing.linear, useNativeDriver: true }));
     a.start();
     return () => a.stop();
-  }, [w, x]);
+  }, [w, x, still]);
   return (
     <View accessible accessibilityLabel={text.replace(/\s*✦\s*/g, '. ')} style={{ marginHorizontal: -24, marginTop: 30, backgroundColor: C.ink, paddingVertical: 12, overflow: 'hidden', transform: [{ rotate: '1.6deg' }] }}>
       <Animated.View style={{ flexDirection: 'row', width: 10000, transform: [{ translateX: x }] }}>

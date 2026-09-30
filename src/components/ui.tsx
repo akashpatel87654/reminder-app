@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
-  Animated, Easing, Pressable, Text, TextInput, View,
+  AccessibilityInfo, Animated, Easing, Pressable, Text, TextInput, View,
   type PressableProps, type StyleProp, type TextInputProps, type TextProps, type ViewStyle,
 } from 'react-native';
 import { border, C, F, shadow } from '../theme';
@@ -123,15 +123,32 @@ export const Divider = () => <View style={{ height: 2, backgroundColor: C.ink, o
 
 // ---- motion -------------------------------------------------------------
 
+// Honours the OS "Reduce Motion" setting: loops stop, entrances appear instantly, confetti is skipped.
+let reduced = false;
+AccessibilityInfo.isReduceMotionEnabled().then((r) => { reduced = r; });
+AccessibilityInfo.addEventListener('reduceMotionChanged', (r) => { reduced = r; });
+export function useReduceMotion() {
+  const [r, setR] = useState(reduced);
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setR);
+    const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', setR);
+    return () => sub.remove();
+  }, []);
+  return r;
+}
+export const reduceMotionNow = () => reduced;
+
 // Entrance: fade + rise + slight scale-up, like the design's `rise` keyframe.
 const hide = (h?: boolean) => (h ? { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' as const } : {});
 
 // `hidden`: purely decorative, skipped by screen readers.
 export function Rise({ delay = 0, children, style, hidden }: { delay?: number; children: ReactNode; style?: StyleProp<ViewStyle>; hidden?: boolean }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const v = useRef(new Animated.Value(reduced ? 1 : 0)).current;
+  const still = useReduceMotion();
   useEffect(() => {
+    if (still) return v.setValue(1);
     Animated.timing(v, { toValue: 1, duration: 500, delay, easing: Easing.bezier(0.2, 1.3, 0.4, 1), useNativeDriver: true }).start();
-  }, [v, delay]);
+  }, [v, delay, still]);
   return (
     <Animated.View {...hide(hidden)} style={[style, {
       opacity: v.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, 1, 1] }),
@@ -141,10 +158,12 @@ export function Rise({ delay = 0, children, style, hidden }: { delay?: number; c
 }
 
 export function PopIn({ delay = 0, children, style }: { delay?: number; children: ReactNode; style?: StyleProp<ViewStyle> }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const v = useRef(new Animated.Value(reduced ? 1 : 0)).current;
+  const still = useReduceMotion();
   useEffect(() => {
+    if (still) return v.setValue(1);
     Animated.spring(v, { toValue: 1, delay, friction: 5, tension: 120, useNativeDriver: true }).start();
-  }, [v, delay]);
+  }, [v, delay, still]);
   return <Animated.View style={[style, { opacity: v.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 1, 1] }), transform: [{ scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] }) }] }]}>{children}</Animated.View>;
 }
 
@@ -153,11 +172,13 @@ type LoopKind = 'bob' | 'floaty' | 'spin' | 'wiggle' | 'pulse' | 'nudge';
 // Infinite decorative loops: bob, floaty, spin, wiggle, pulse, nudge.
 export function Loop({ kind, duration = 3000, delay = 0, children, style, hidden }: { kind: LoopKind; duration?: number; delay?: number; children: ReactNode; style?: StyleProp<ViewStyle>; hidden?: boolean }) {
   const v = useRef(new Animated.Value(0)).current;
+  const still = useReduceMotion();
   useEffect(() => {
+    if (still) return v.setValue(0);
     const anim = Animated.loop(Animated.timing(v, { toValue: 1, duration, easing: kind === 'spin' ? Easing.linear : Easing.inOut(Easing.ease), useNativeDriver: true }));
     const t = setTimeout(() => anim.start(), delay);
     return () => { clearTimeout(t); anim.stop(); };
-  }, [v, duration, delay, kind]);
+  }, [v, duration, delay, kind, still]);
   const wave = (a: number) => v.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, a, 0] });
   const transform =
     kind === 'bob' ? [{ translateY: wave(-12) }]
