@@ -86,3 +86,22 @@ export async function deleteSub(id: string) {
   const { error } = await supabase.from('subscriptions').delete().eq('id', id);
   if (error) throw error;
 }
+
+const MONTHS_PER_CYCLE: Record<Exclude<BillingCycle, 'custom_days' | 'one_time'>, number> = { monthly: 1, quarterly: 3, yearly: 12 };
+
+// Recurring spend per currency (no FX: mixed currencies are shown side by side).
+// Free trials and one-time purchases aren't ongoing spend, so they're left out.
+export function monthlyTotals(subs: Subscription[]) {
+  const totals: Record<string, number> = {};
+  for (const s of subs) {
+    if (s.status !== 'active' || s.type === 'free_trial' || s.billing_cycle === 'one_time') continue;
+    const perMonth = s.billing_cycle === 'custom_days'
+      ? (s.price * 365.25) / 12 / (s.custom_days || 30)
+      : s.price / MONTHS_PER_CYCLE[s.billing_cycle];
+    totals[s.currency] = (totals[s.currency] ?? 0) + perMonth;
+  }
+  return totals;
+}
+
+export const upcoming = (subs: Subscription[], withinDays = 7) =>
+  subs.filter((s) => s.status === 'active' && daysUntil(s.next_date) >= 0 && daysUntil(s.next_date) <= withinDays);

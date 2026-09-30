@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { Alert, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { daysUntil, deleteSub, listSubs, money, setStatus, TYPE_LABELS, type Subscription } from '../lib/subs';
 import { listStyles, styles } from '../lib/styles';
+import { Summary } from '../components/Summary';
 
 function dueLabel(days: number) {
   if (days < 0) return `${-days}d overdue`;
@@ -47,6 +48,7 @@ export default function Home() {
       <FlatList
         data={subs}
         keyExtractor={(s) => s.id}
+        ListHeaderComponent={<Summary subs={subs} />}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}
         ListEmptyComponent={!loading ? <Text style={styles.muted}>No subscriptions yet. Tap + to add one.</Text> : null}
         renderItem={({ item: s }) => {
