@@ -27,4 +27,4 @@ We don't sell your data, show ads, or use tracking or analytics SDKs.
 - Delete your account from Settings. This permanently deletes your profile and all subscriptions.
 
 ## Contact
-<support email — fill in before publishing>
+heatmonks.venture@gmail.com

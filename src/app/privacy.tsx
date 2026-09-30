@@ -31,7 +31,7 @@ export default function Privacy() {
         </Rise>
       ))}
       <Rise delay={260} style={{ marginTop: 18, padding: 16, borderRadius: 20, borderWidth: 2.5, borderStyle: 'dashed', borderColor: C.ink }}>
-        <T w={700} size={15}>questions? privacy@subtrack.app</T>
+        <T w={700} size={15}>questions? heatmonks.venture@gmail.com</T>
       </Rise>
     </Screen>
   );

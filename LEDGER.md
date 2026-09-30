@@ -35,5 +35,5 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
 - Hosted Supabase may serve edge-function HTML as text/plain on *.supabase.co; check the unsubscribe page after deploy (custom domain/proxy if so).
-- `privacy@subtrack.app` (from the design) must be a real inbox before publishing.
-- Release: `npx eas-cli@latest login` → `npx eas-cli@latest build --profile preview --platform all` for internal testers; host PRIVACY.md at a public URL for the store listings and fill the support email.
+- Contact email (privacy screen + PRIVACY.md): heatmonks.venture@gmail.com. Not usable as Resend `EMAIL_FROM` — Resend only sends from a verified domain.
+- Release: `npx eas-cli@latest login` → `npx eas-cli@latest build --profile preview --platform all` for internal testers; host PRIVACY.md at a public URL for the store listings.
