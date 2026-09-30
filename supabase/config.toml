@@ -242,6 +242,16 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# Sign-in code (the app verifies 6-digit codes, never links). Hosted project: paste
+# supabase/templates/login-code.html into Auth → Email Templates → Magic Link AND Confirm signup.
+[auth.email.template.magic_link]
+subject = "your SubTrack code"
+content_path = "./supabase/templates/login-code.html"
+
+[auth.email.template.confirmation]
+subject = "your SubTrack code"
+content_path = "./supabase/templates/login-code.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

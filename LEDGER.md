@@ -15,11 +15,13 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | T9 Release | partial | 4c0dafd | `eas.json` (preview + production), `PRIVACY.md`, expo-doctor 21/21. Icon/splash now from design. Waiting on: EAS login, store accounts |
 | D1 Design pass | done | — | Owner's design (SubTrack App (offline).html) built natively: splash, onboarding, login/OTP, home, subs (swipe rows), add/edit + calendar sheet, detail, stats, email preview, settings, privacy, error, permission + notifs-off sheets, confirm modal, toasts, confetti. Bricolage Grotesque + DM Mono via expo-google-fonts. Email + unsubscribe page restyled to match (+ POST-only undo/resubscribe). `color` column (0006). |
 
+| D2 Sign-in code email | done | — | `supabase/templates/login-code.html` (design-styled, shows `{{ .Token }}`) wired for Magic Link + Confirm signup in config.toml; verified locally: returning + new user both receive a code and verify |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
 - No tests (owner's call). Verification = `npm run typecheck` + `npx expo export` + web preview against local Supabase.
-- Local dev: `npx supabase start` (Docker) applies all migrations; `.env` → `http://127.0.0.1:54321` + local publishable key; `npx expo start --web` for a browser preview. Local auth emails land in Mailpit (http://127.0.0.1:54324) but the default template has no code — get one via `POST /auth/v1/admin/generate_link` (`email_otp`). Web deps (react-native-web, react-dom, @expo/metro-runtime) are only for this preview.
+- Local dev: `npx supabase start` (Docker) applies all migrations; `.env` → `http://127.0.0.1:54321` + local publishable key; `npx expo start --web` for a browser preview. Local sign-in codes land in Mailpit (http://127.0.0.1:54324). Web deps (react-native-web, react-dom, @expo/metro-runtime) are only for this preview.
 - Swipe rows use PanResponder; mouse-drag in the web preview doesn't trigger it, so swipe is unverified until a device/simulator run.
 - Design deviations (deliberate): no "load demo subs" and no "use demo code" (prototype-only, would write fake data into real accounts); no "simulate offline" toggle; added CATEGORY chips + MANAGE LINK field to the form (design shows both on detail but had no input); quick-pick fills name/color/category but not price (design's USD prices are wrong for INR users); offline = read-only cached copy + banner (design's "saves offline and syncs later" would need a sync queue); privacy copy drops "push token"/"Expo" since reminders are local notifications.
 - Totals across currencies use fixed USD rates (USD/EUR/GBP/INR, like the design); marked `ponytail:` in subs.ts.
@@ -30,7 +32,7 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - Enable extensions `pg_cron` + `pg_net`; add Vault secrets `project_url`, `cron_secret` (see 0003_cron.sql).
 - Deploy email function: `supabase functions deploy send-reminders` and set secrets
   `CRON_SECRET` (= vault cron_secret), `RESEND_API_KEY`, `EMAIL_FROM` (e.g. `SubTrack <reminders@yourdomain>`, domain verified in Resend).
-- Supabase Auth → Email Templates → "Magic Link" must include `{{ .Token }}` so users get a 6-digit code (app verifies codes, no deep links).
+- Hosted Supabase: Auth → Email Templates → paste `supabase/templates/login-code.html` into BOTH "Magic Link" and "Confirm signup" (subject: `your SubTrack code`). Without it users get a link, not the 6-digit code the app asks for.
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
 - No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
