@@ -115,7 +115,7 @@ export function Pill({ text, bg = C.white, fg = C.ink, pulse, style }: { text: s
 }
 
 export const Field = ({ style, ...p }: TextInputProps) => (
-  <TextInput placeholderTextColor="#14141466" {...p}
+  <TextInput placeholderTextColor={C.placeholder} {...p}
     style={[{ height: 56, borderRadius: 16, paddingHorizontal: 16, fontFamily: F[600], fontSize: 18, color: C.ink, backgroundColor: C.white }, border(), shadow(4), style]} />
 );
 

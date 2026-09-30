@@ -111,7 +111,7 @@ export default function Settings() {
       </Rise>
 
       <Rise delay={160} style={{ marginTop: 20, gap: 12 }}>
-        <Btn kind="plain" title="send me a test nag 🔔" bg={C.blue} fg={C.white} h={56} size={16} onPress={testPush} />
+        <Btn kind="plain" title="send me a test nag 🔔" bg={C.blueBtn} fg={C.white} h={56} size={16} onPress={testPush} />
         <Btn kind="plain" title="export all as CSV ↓" bg={C.lime} h={56} size={16} onPress={exportCsv} />
         <Btn kind="plain" title="log out" h={56} size={16} onPress={() => signOut().then(() => toast('logged out. see ya ✌︎'))} />
         <Pressable accessibilityRole="button" onPress={() => setConfirm(true)}

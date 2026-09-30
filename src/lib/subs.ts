@@ -36,7 +36,7 @@ const RATE: Record<string, number> = { USD: 1, EUR: 1.08, GBP: 1.27, INR: 0.012 
 export const convert = (v: number, from: string, to: string) => (v * (RATE[from] ?? 1)) / (RATE[to] ?? 1);
 
 export const POPULAR = [
-  { name: 'YouTube Premium', color: C.red, category: 'Streaming' },
+  { name: 'YouTube Premium', color: '#FF4D4D', category: 'Streaming' }, // card colour, ink text
   { name: 'Disney+', color: C.blue, category: 'Streaming' },
   { name: 'Apple Music', color: C.pink, category: 'Music' },
   { name: 'Max', color: C.purple, category: 'Streaming' },

@@ -172,7 +172,7 @@ export default function SubForm() {
         <Field value={f.portal_url ?? ''} onChangeText={(v) => set({ portal_url: v })} placeholder="netflix.com/account" autoCapitalize="none" keyboardType="url" autoCorrect={false} style={{ fontSize: 16 }} />
 
         <Label>NOTES</Label>
-        <TextInput value={f.notes ?? ''} onChangeText={(v) => set({ notes: v })} placeholder="shared w/ roommate, cancel after finals…" placeholderTextColor="#14141466" multiline
+        <TextInput value={f.notes ?? ''} onChangeText={(v) => set({ notes: v })} placeholder="shared w/ roommate, cancel after finals…" placeholderTextColor={C.placeholder} multiline
           style={[{ minHeight: 90, borderRadius: 16, paddingHorizontal: 16, paddingTop: 14, paddingBottom: 14, fontFamily: F[500], fontSize: 16, color: C.ink, backgroundColor: C.note, textAlignVertical: 'top' }, border(), shadow(4)]} />
       </ScrollView>
 

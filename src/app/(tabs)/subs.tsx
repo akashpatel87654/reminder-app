@@ -69,7 +69,7 @@ export default function Subs() {
 
       <Rise delay={40} style={[{ marginTop: 16, flexDirection: 'row', alignItems: 'center', gap: 10, height: 50, paddingLeft: 16, paddingRight: 8, borderRadius: 16, backgroundColor: C.white }, border(), shadow(4)]}>
         <T size={16}>🔍</T>
-        <TextInput value={search} onChangeText={(v) => { setSearch(v); setOpenRow(null); }} placeholder="search subs or categories" placeholderTextColor="#14141466"
+        <TextInput value={search} onChangeText={(v) => { setSearch(v); setOpenRow(null); }} placeholder="search subs or categories" placeholderTextColor={C.placeholder}
           style={{ flex: 1, height: '100%', fontFamily: F[600], fontSize: 16, color: C.ink }} />
         {!!search && (
           <Pressable accessibilityLabel="Clear search" onPress={() => setSearch('')} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center' }}>

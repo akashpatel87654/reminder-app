@@ -7,14 +7,17 @@ export const C = {
   lime: '#C6F432',
   pink: '#FF7AC6',
   purple: '#9B7BFF',
-  blue: '#4D7CFF',
+  blue: '#4D7CFF', // card colour (ink text)
+  blueBtn: '#3366E6', // button fill with white text: 5.0:1
   orange: '#FF8A3D',
   yellow: '#FFE14D',
   mint: '#5EE6C8',
-  red: '#FF4D4D',
-  redInk: '#E02828',
+  // Text-bearing colours are tuned for WCAG AA (≥4.5:1) against their usual partner.
+  red: '#D93030', // white text on it: 4.8:1
+  redInk: '#CC2020', // on cream: 5.2:1
   note: '#FFF3B0',
   scrim: '#14141473',
+  placeholder: '#1414149E', // 62% ink: 5.2:1 on white
 };
 
 export const PALETTE = [C.pink, C.lime, C.purple, C.blue, C.orange, C.yellow, C.mint];
