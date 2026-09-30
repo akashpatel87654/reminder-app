@@ -1,6 +1,6 @@
 import { Redirect, router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, TextInput, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Pressable, TextInput, View } from 'react-native';
 import { ErrorView, useFx } from '../components/overlays';
 import { Screen } from '../components/Screen';
 import { Btn, Field, Loop, PopIn, RoundBtn, Rise, T } from '../components/ui';
@@ -18,6 +18,13 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
   const [wait, setWait] = useState(0);
   const retry = useRef<() => void>(() => {});
+  const [kb, setKb] = useState(false); // keyboard open: drop the decoration so the field stays visible
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setKb(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKb(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
 
   useEffect(() => {
     if (!wait) return;
@@ -112,8 +119,10 @@ export default function Login() {
 
   return (
     <Screen>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, paddingHorizontal: 24, paddingTop: 8, paddingBottom: 36 }}>
-        <View style={{ height: 280 }}>
+      {/* behavior="padding" owns paddingBottom, so the screen's own padding lives on the inner view. */}
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 8, paddingBottom: 36 }}>
+        <View style={{ height: kb ? 0 : 280, overflow: 'hidden' }}>
           <Loop kind="bob" duration={3200} style={{ position: 'absolute', left: 0, top: 24 }}>
             <View style={[{ width: 118, height: 118, borderRadius: 59, backgroundColor: C.pink, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-10deg' }] }, border(3), shadow(5)]}><T w={800} size={56}>N</T></View>
           </Loop>
@@ -156,6 +165,7 @@ export default function Login() {
             <Pressable onPress={() => router.push('/privacy')}><T mono size={12} style={{ textDecorationLine: 'underline' }}>privacy</T></Pressable>
           </View>
         </Rise>
+      </View>
       </KeyboardAvoidingView>
     </Screen>
   );

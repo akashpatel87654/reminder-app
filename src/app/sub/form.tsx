@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Calendar } from '../../components/Calendar';
 import { useFx } from '../../components/overlays';
@@ -64,7 +64,7 @@ export default function SubForm() {
   }
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: C.cream }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: C.cream }}>
       <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: insets.top + 10, paddingHorizontal: 20, paddingBottom: 24 }}>
         <Rise style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -179,6 +179,9 @@ export default function SubForm() {
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: insets.bottom + 16, backgroundColor: C.cream }}>
         <Btn title={saving ? 'saving…' : existing ? 'save changes ✓' : 'add it ✦'} h={60} size={19} shadowColor={C.pink} disabled={saving} onPress={onSave} />
       </View>
+
+      {/* Solid strip under the status bar so scrolled content doesn't run beneath the clock. */}
+      <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: C.cream }} />
 
       {cal && <Calendar visible value={f.next_date} onPick={(d) => set({ next_date: d })} onClose={() => setCal(false)} />}
     </KeyboardAvoidingView>

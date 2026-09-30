@@ -18,7 +18,9 @@ export type NotifState = 'granted' | 'denied' | 'undetermined';
 export async function notifState(): Promise<{ state: NotifState; canAsk: boolean }> {
   if (web) return { state: 'granted', canAsk: false };
   const p = await Notifications.getPermissionsAsync();
-  return { state: p.status as NotifState, canAsk: p.canAskAgain };
+  // Android 13+ reports 'denied' before the app has ever asked; while it can still ask, that's really "not asked yet".
+  const state: NotifState = p.status !== 'granted' && p.canAskAgain ? 'undetermined' : (p.status as NotifState);
+  return { state, canAsk: p.canAskAgain };
 }
 
 export async function askPermission() {
