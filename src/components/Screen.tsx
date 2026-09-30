@@ -8,9 +8,13 @@ export function Screen({ children, scroll, bottom = 40, bg = C.cream, ...p }: { 
   const insets = useSafeAreaInsets();
   if (!scroll) return <View style={{ flex: 1, backgroundColor: bg, paddingTop: insets.top }}>{children}</View>;
   return (
-    <ScrollView {...p} style={{ flex: 1, backgroundColor: bg }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled"
-      contentContainerStyle={[{ paddingTop: insets.top + 10, paddingHorizontal: 20, paddingBottom: insets.bottom + bottom }, p.contentContainerStyle]}>
-      {children}
-    </ScrollView>
+    <View style={{ flex: 1, backgroundColor: bg }}>
+      <ScrollView {...p} style={{ flex: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled"
+        contentContainerStyle={[{ paddingTop: insets.top + 10, paddingHorizontal: 20, paddingBottom: insets.bottom + bottom }, p.contentContainerStyle]}>
+        {children}
+      </ScrollView>
+      {/* Solid strip under the status bar so scrolled content doesn't run beneath the clock. */}
+      <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: bg }} />
+    </View>
   );
 }
