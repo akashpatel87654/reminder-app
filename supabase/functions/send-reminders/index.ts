@@ -10,7 +10,11 @@ const env = (k: string) => {
 };
 const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'));
 const SECRET = env('CRON_SECRET');
-const SELF_URL = `${env('SUPABASE_URL')}/functions/v1/send-reminders`;
+// Hosted Supabase rewrites text/html GET responses to text/plain unless the function is
+// served from a custom domain. So: plain-text pages by default; set PUBLIC_FUNCTION_URL
+// (this function's URL on your custom domain) to switch links + pages to the styled HTML.
+const PUBLIC_URL = Deno.env.get('PUBLIC_FUNCTION_URL');
+const SELF_URL = PUBLIC_URL ?? `${env('SUPABASE_URL')}/functions/v1/send-reminders`;
 
 type Cycle = 'monthly' | 'quarterly' | 'yearly' | 'custom_days' | 'one_time';
 export type Due = {
@@ -164,11 +168,17 @@ async function toggle(req: Request, url: URL, param: 'unsub' | 'resub') {
     return new Response('Invalid link', { status: 400 });
   }
   const resub = param === 'resub';
-  const { data, error } = await db.from('subscriptions').update({ email_enabled: resub }).eq('id', id).select('name').single();
-  if (error) return new Response('Something went wrong, try again later', { status: 500 });
+  const { data, error } = await db.from('subscriptions').update({ email_enabled: resub }).eq('id', id).select('name').maybeSingle();
+  if (error) return new Response('Something went wrong, try again later.', { status: 500 });
+  if (!data) return new Response('This subscription no longer exists, so there is nothing to unsubscribe from.', { status: 404 });
+  if (!PUBLIC_URL) return new Response(plainPage(data.name, resub), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
   const html = renderPage(data.name, resub, resub ? null : `?resub=${id}&sig=${encodeURIComponent(sig)}`);
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }
+
+export const plainPage = (name: string, resubscribed: boolean) => resubscribed
+  ? `SubTrack ✓ you're back in.\n\nEmails about ${name} are back on. We'll write before it charges.`
+  : `SubTrack ✓ you're unsubscribed.\n\nNo more emails about ${name}. Push reminders in the app still work.\n\nChanged your mind? Open SubTrack → ${name} → edit → turn on "email me too".\nOther subs keep emailing as usual.`;
 
 if (import.meta.main) Deno.serve(async (req) => {
   const url = new URL(req.url);

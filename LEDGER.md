@@ -17,6 +17,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 | D2 Sign-in code email | done | — | `supabase/templates/login-code.html` (design-styled, shows `{{ .Token }}`) wired for Magic Link + Confirm signup in config.toml; verified locally: returning + new user both receive a code and verify |
 
+| D3 Unsubscribe on hosted Supabase | done | — | Supabase rewrites text/html GETs to text/plain without a custom domain (confirmed in their limits docs). Default now = readable plain-text confirmation (undo = in-app toggle); `PUBLIC_FUNCTION_URL` (custom domain) switches links + styled HTML page with undo. Deleted sub → 404 instead of 500. Verified vs local DB: unsub flips flag, 404 path, HTML mode, POST resub |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
@@ -36,6 +38,6 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
 - No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
-- Hosted Supabase may serve edge-function HTML as text/plain on *.supabase.co; check the unsubscribe page after deploy (custom domain/proxy if so).
+- Optional: Supabase custom domain → set function secret `PUBLIC_FUNCTION_URL=https://<domain>/functions/v1/send-reminders` to get the styled unsubscribe page with undo.
 - Contact email (privacy screen + PRIVACY.md): heatmonks.venture@gmail.com. Not usable as Resend `EMAIL_FROM` — Resend only sends from a verified domain.
 - Release: `npx eas-cli@latest login` → `npx eas-cli@latest build --profile preview --platform all` for internal testers; host PRIVACY.md at a public URL for the store listings.
