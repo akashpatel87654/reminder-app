@@ -142,9 +142,9 @@ export default function Home() {
                 <Rise key={s.id} delay={200 + i * 80}>
                   <Pressable accessibilityRole="button" accessibilityLabel={`${s.name}, ${kind(s)} ${b.text}, ${priceLabel(s)}`}
                     onPress={() => router.push({ pathname: '/sub/[id]', params: { id: s.id } })}
-                    style={({ pressed }) => [{ width: 168, height: 200, backgroundColor: s.color, borderRadius: 26, padding: 14, justifyContent: 'space-between',
+                    style={({ pressed }) => [{ width: 168, minHeight: 200, backgroundColor: s.color, borderRadius: 26, padding: 14, justifyContent: 'space-between',
                       transform: pressed ? [{ scale: 0.93 }] : [{ rotate: `${TILT[i % 6]}deg` }] }, border(3), pressed ? {} : shadow(5)]}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <Letter name={s.name} color={C.white} size={44} />
                       <Pill text={b.text} bg={b.bg} fg={b.fg} pulse={b.hot} />
                     </View>

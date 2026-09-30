@@ -8,11 +8,15 @@ import { border, C, F, shadow } from '../theme';
 
 type W = 500 | 600 | 700 | 800;
 
+// Large-text support: body text scales with the OS setting; the design's huge display type is
+// already big, so it's capped to keep layouts intact.
+const maxScale = (size: number) => (size >= 28 ? 1.15 : size >= 18 ? 1.3 : 1.6);
+
 // Custom fonts ignore fontWeight on Android, so weight picks the font file.
 export function T({ w = 500, mono, size = 16, color = C.ink, style, ...p }:
   TextProps & { w?: W; mono?: boolean | 500; size?: number; color?: string }) {
   const fontFamily = mono ? (mono === 500 ? F.mono500 : F.mono) : F[w];
-  return <Text {...p} style={[{ fontFamily, fontSize: size, color }, style]} />;
+  return <Text maxFontSizeMultiplier={maxScale(size)} {...p} style={[{ fontFamily, fontSize: size, color }, style]} />;
 }
 
 export const Label = ({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) => (
@@ -108,14 +112,14 @@ export function Letter({ name, color, size = 46, fontSize = 20, bw = 2.5 }: { na
 export function Pill({ text, bg = C.white, fg = C.ink, pulse, style }: { text: string; bg?: string; fg?: string; pulse?: boolean; style?: StyleProp<ViewStyle> }) {
   const inner = (
     <View style={[{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, backgroundColor: bg }, border(2), style]}>
-      <T w={800} size={12} color={fg}>{text}</T>
+      <T w={800} size={12} color={fg} maxFontSizeMultiplier={1.25}>{text}</T>
     </View>
   );
   return pulse ? <Loop kind="pulse" duration={1300}>{inner}</Loop> : inner;
 }
 
 export const Field = ({ style, ...p }: TextInputProps) => (
-  <TextInput placeholderTextColor={C.placeholder} {...p}
+  <TextInput placeholderTextColor={C.placeholder} maxFontSizeMultiplier={1.4} {...p}
     style={[{ height: 56, borderRadius: 16, paddingHorizontal: 16, fontFamily: F[600], fontSize: 18, color: C.ink, backgroundColor: C.white }, border(), shadow(4), style]} />
 );
 

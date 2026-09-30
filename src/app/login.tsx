@@ -1,6 +1,6 @@
 import { Redirect, router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Pressable, TextInput, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Pressable, TextInput, useWindowDimensions, View } from 'react-native';
 import { ErrorView, useFx } from '../components/overlays';
 import { Screen } from '../components/Screen';
 import { Btn, Field, Loop, PopIn, RoundBtn, Rise, T } from '../components/ui';
@@ -19,6 +19,7 @@ export default function Login() {
   const [wait, setWait] = useState(0);
   const retry = useRef<() => void>(() => {});
   const [kb, setKb] = useState(false); // keyboard open: drop the decoration so the field stays visible
+  const { fontScale } = useWindowDimensions(); // very large text: same, the screen doesn't scroll
 
   useEffect(() => {
     const show = Keyboard.addListener('keyboardDidShow', () => setKb(true));
@@ -122,7 +123,7 @@ export default function Login() {
       {/* behavior="padding" owns paddingBottom, so the screen's own padding lives on the inner view. */}
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 8, paddingBottom: 36 }}>
-        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: kb ? 0 : 280, overflow: 'hidden' }}>
+        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: kb || fontScale > 1.35 ? 0 : 280, overflow: 'hidden' }}>
           <Loop kind="bob" duration={3200} style={{ position: 'absolute', left: 0, top: 24 }}>
             <View style={[{ width: 118, height: 118, borderRadius: 59, backgroundColor: C.pink, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-10deg' }] }, border(3), shadow(5)]}><T w={800} size={56}>N</T></View>
           </Loop>
