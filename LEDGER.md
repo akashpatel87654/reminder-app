@@ -21,7 +21,7 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 | D4 Month-end drift | done | — | 0007: `anchor_day` (trigger sets it from user-picked dates; roll flags its own updates so it keeps it). Monthly/quarterly/yearly land on the anchor clamped to month length: Jan 31 → Feb 28 → Mar 31; Feb 29 yearly → Feb 28 off-leap. Verified in local DB incl. as `authenticated` role |
 
-| D5 Offline changes | done | — | Store queues add/edit/cancel/delete/settings when there's no connection (per-user queue in localStorage), applies them on screen at once ("saved offline ✦" toast), replays in order on next refresh; offline-created subs get `local-*` ids remapped on sync; server-rejected ops are dropped, not blocking. Also: 10s request timeout (a hung connection used to spin forever). Verified in web preview with the API container paused: add + cancel offline → survive reload → sync to DB with correct ids |
+| D5 Offline changes | done | — | Store queues add/edit/cancel/delete/settings when there's no connection (per-user queue in localStorage), applies them on screen at once ("saved offline ✦" toast), replays in order on next refresh (app open, foreground, or every 30s while offline); offline-created subs get `local-*` ids remapped on sync; server-rejected ops are dropped, not blocking. Also: 10s request timeout (a hung connection used to spin forever). Verified in web preview with the API container paused: add + cancel offline → survive reload → sync to DB with correct ids |
 
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.

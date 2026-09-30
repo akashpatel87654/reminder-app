@@ -134,6 +134,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [uid, refresh]);
 
+  // While offline, keep retrying so queued changes sync as soon as the connection is back.
+  useEffect(() => {
+    if (!offline || !uid) return;
+    const t = setInterval(refresh, 30_000);
+    return () => clearInterval(t);
+  }, [offline, uid, refresh]);
+
   // Try online; on no connection (or with older changes still queued, to keep order) queue the op
   // and apply it locally instead. Returns true when queued. Other errors propagate to the caller.
   async function attempt(online: () => Promise<unknown>, op: Op, applyLocal: () => void) {
