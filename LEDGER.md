@@ -4,8 +4,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 | Task | Status | Commit | Notes |
 |------|--------|--------|-------|
-| T1 Project setup | done | — | Expo SDK 57, Expo Router (`src/app`), Supabase client w/ expo-sqlite localStorage |
-| T2 Auth | todo | | |
+| T1 Project setup | done | ab276ac | Expo SDK 57, Expo Router (`src/app`), Supabase client w/ expo-sqlite localStorage |
+| T2 Auth | done | — | Email OTP (code, not link); profile row via `auth.users` trigger; timezone synced on sign-in; `Stack.Protected` guards |
 | T3 Subscription CRUD | todo | | |
 | T4 Home summary | todo | | |
 | T5 Local push reminders | todo | | |
@@ -22,3 +22,5 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 ## Needs owner
 - Supabase project: fill `.env` from `.env.example`, run `supabase/migrations/*.sql`.
+- Supabase Auth → Email Templates → "Magic Link" must include `{{ .Token }}` so users get a 6-digit code (app verifies codes, no deep links).
+- Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
