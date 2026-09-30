@@ -36,20 +36,20 @@ export default function Subs() {
     setOpenRow(null);
     const next = s.status === 'active' ? 'cancelled' : 'active';
     try {
-      await patch(s.id, { status: next });
-      toast(next === 'cancelled' ? 'cancelled. your wallet says thx 💸' : 'back from the dead ✦ reminders on');
-    } catch (e) {
-      toast('couldn’t save that. check your connection');
+      const { queued } = await patch(s.id, { status: next });
+      toast(queued ? 'saved offline ✦ syncs when you’re back' : next === 'cancelled' ? 'cancelled. your wallet says thx 💸' : 'back from the dead ✦ reminders on');
+    } catch {
+      toast('couldn’t save that. try again');
     }
   }
   async function doDelete(s: Subscription) {
     setConfirm(null);
     setOpenRow(null);
     try {
-      await remove(s.id);
-      toast('gone. poof. 💨');
+      const { queued } = await remove(s.id);
+      toast(queued ? 'gone ✦ syncs when you’re back' : 'gone. poof. 💨');
     } catch {
-      toast('couldn’t delete. check your connection');
+      toast('couldn’t delete that. try again');
     }
   }
 

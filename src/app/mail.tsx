@@ -26,10 +26,10 @@ export default function Mail() {
 
   async function unsubscribe() {
     try {
-      await patch(s!.id, { email_enabled: false });
-      toast(`no more emails about ${s!.name} ✓`);
+      const { queued } = await patch(s!.id, { email_enabled: false });
+      toast(queued ? 'saved offline ✦ syncs when you’re back' : `no more emails about ${s!.name} ✓`);
     } catch {
-      toast('couldn’t save that. check your connection');
+      toast('couldn’t save that. try again');
     }
   }
 

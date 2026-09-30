@@ -159,4 +159,3 @@ export function ErrorView({ onRetry, onBack }: { onRetry: () => void; onBack?: (
   );
 }
 
-export const isNetworkError = (e: unknown) => /network|fetch|timed? ?out|offline/i.test(String((e as Error)?.message ?? e));

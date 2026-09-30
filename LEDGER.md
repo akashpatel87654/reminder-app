@@ -21,13 +21,15 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 | D4 Month-end drift | done | — | 0007: `anchor_day` (trigger sets it from user-picked dates; roll flags its own updates so it keeps it). Monthly/quarterly/yearly land on the anchor clamped to month length: Jan 31 → Feb 28 → Mar 31; Feb 29 yearly → Feb 28 off-leap. Verified in local DB incl. as `authenticated` role |
 
+| D5 Offline changes | done | — | Store queues add/edit/cancel/delete/settings when there's no connection (per-user queue in localStorage), applies them on screen at once ("saved offline ✦" toast), replays in order on next refresh; offline-created subs get `local-*` ids remapped on sync; server-rejected ops are dropped, not blocking. Also: 10s request timeout (a hung connection used to spin forever). Verified in web preview with the API container paused: add + cancel offline → survive reload → sync to DB with correct ids |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
 - No tests (owner's call). Verification = `npm run typecheck` + `npx expo export` + web preview against local Supabase.
 - Local dev: `npx supabase start` (Docker) applies all migrations; `.env` → `http://127.0.0.1:54321` + local publishable key; `npx expo start --web` for a browser preview. Local sign-in codes land in Mailpit (http://127.0.0.1:54324). Web deps (react-native-web, react-dom, @expo/metro-runtime) are only for this preview.
 - Swipe rows use PanResponder; mouse-drag in the web preview doesn't trigger it, so swipe is unverified until a device/simulator run.
-- Design deviations (deliberate): no "load demo subs" and no "use demo code" (prototype-only, would write fake data into real accounts); no "simulate offline" toggle; added CATEGORY chips + MANAGE LINK field to the form (design shows both on detail but had no input); quick-pick fills name/color/category but not price (design's USD prices are wrong for INR users); offline = read-only cached copy + banner (design's "saves offline and syncs later" would need a sync queue); privacy copy drops "push token"/"Expo" since reminders are local notifications.
+- Design deviations (deliberate): no "load demo subs" and no "use demo code" (prototype-only, would write fake data into real accounts); no "simulate offline" toggle; added CATEGORY chips + MANAGE LINK field to the form (design shows both on detail but had no input); quick-pick fills name/color/category but not price (design's USD prices are wrong for INR users); privacy copy drops "push token"/"Expo" since reminders are local notifications.
 - Totals across currencies use fixed USD rates (USD/EUR/GBP/INR, like the design); marked `ponytail:` in subs.ts.
 - Shared state: `src/lib/store.tsx` (subs + profile + notif permission), cached per user in localStorage for offline reads; every mutation resyncs local notifications.
 
@@ -38,7 +40,7 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
   `CRON_SECRET` (= vault cron_secret), `RESEND_API_KEY`, `EMAIL_FROM` (e.g. `SubTrack <reminders@yourdomain>`, domain verified in Resend).
 - Hosted Supabase: Auth → Email Templates → paste `supabase/templates/login-code.html` into BOTH "Magic Link" and "Confirm signup" (subject: `your SubTrack code`). Without it users get a link, not the 6-digit code the app asks for.
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
-- No server push (Expo push token) in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
+- Server push is blocked on EAS login (needs an EAS projectId for push tokens). No server push in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
 - Optional: Supabase custom domain → set function secret `PUBLIC_FUNCTION_URL=https://<domain>/functions/v1/send-reminders` to get the styled unsubscribe page with undo.
 - Contact email (privacy screen + PRIVACY.md): heatmonks.venture@gmail.com. Not usable as Resend `EMAIL_FROM` — Resend only sends from a verified domain.

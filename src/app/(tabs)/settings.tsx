@@ -27,7 +27,7 @@ export default function Settings() {
   const testPush = useTestNag(() => setSheet(true));
   if (!profile) return <Screen><View /></Screen>;
 
-  const save = (p: Parameters<typeof setProfile>[0]) => setProfile(p).catch(() => toast('couldn’t save that. check your connection'));
+  const save = (p: Parameters<typeof setProfile>[0]) => setProfile(p).then(({ queued }) => queued && toast('saved offline ✦ syncs when you’re back'), () => toast('couldn’t save that. try again'));
   const hour = (d: number) => save({ reminder_hour: Math.min(22, Math.max(6, profile.reminder_hour + d)) });
 
   function togglePush() {

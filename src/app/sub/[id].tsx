@@ -24,20 +24,20 @@ export default function Detail() {
   async function toggleCancel() {
     const next = active ? 'cancelled' : 'active';
     try {
-      await patch(d!.id, { status: next });
-      toast(next === 'cancelled' ? 'cancelled. your wallet says thx 💸' : 'back from the dead ✦ reminders on');
+      const { queued } = await patch(d!.id, { status: next });
+      toast(queued ? 'saved offline ✦ syncs when you’re back' : next === 'cancelled' ? 'cancelled. your wallet says thx 💸' : 'back from the dead ✦ reminders on');
     } catch {
-      toast('couldn’t save that. check your connection');
+      toast('couldn’t save that. try again');
     }
   }
   async function doDelete() {
     setConfirm(false);
     try {
-      await remove(d!.id);
-      toast('gone. poof. 💨');
+      const { queued } = await remove(d!.id);
+      toast(queued ? 'gone ✦ syncs when you’re back' : 'gone. poof. 💨');
       router.back();
     } catch {
-      toast('couldn’t delete. check your connection');
+      toast('couldn’t delete that. try again');
     }
   }
 

@@ -47,7 +47,7 @@ export default function SubForm() {
     const portal = f.portal_url?.trim();
     setSaving(true);
     try {
-      const saved = await save({
+      const { sub: saved, queued } = await save({
         ...f, name, price: p, notes: f.notes?.trim() || null,
         portal_url: portal ? (/^https?:\/\//i.test(portal) ? portal : `https://${portal}`) : null,
         custom_days: f.billing_cycle === 'custom_days' ? Math.max(1, f.custom_days || 30) : null,
@@ -55,10 +55,10 @@ export default function SubForm() {
       confetti();
       const hour = profile?.reminder_hour ?? 9;
       const next = [...f.remind_days_before].sort((a, b) => b - a).map((d) => reminderAt(f.next_date, d, hour)).find((at) => at.getTime() > Date.now());
-      toast(!next ? 'saved ✦ reminder firing now' : `saved ✦ we’ll ping you ${DOW[next.getDay()]} at ${hourLabel(hour)}`);
+      toast(queued ? 'saved offline ✦ syncs when you’re back' : !next ? 'saved ✦ reminder firing now' : `saved ✦ we’ll ping you ${DOW[next.getDay()]} at ${hourLabel(hour)}`);
       router.replace({ pathname: '/sub/[id]', params: { id: saved.id } });
     } catch {
-      toast('couldn’t save. check your connection');
+      toast('couldn’t save that. try again');
       setSaving(false);
     }
   }

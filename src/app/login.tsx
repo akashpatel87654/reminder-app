@@ -1,10 +1,10 @@
 import { Redirect, router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, TextInput, View } from 'react-native';
-import { ErrorView, isNetworkError, useFx } from '../components/overlays';
+import { ErrorView, useFx } from '../components/overlays';
 import { Screen } from '../components/Screen';
 import { Btn, Field, Loop, PopIn, RoundBtn, Rise, T } from '../components/ui';
-import { pref } from '../lib/store';
+import { isNetworkError, pref } from '../lib/store';
 import { supabase } from '../lib/supabase';
 import { border, C, F, shadow } from '../theme';
 

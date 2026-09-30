@@ -88,7 +88,7 @@ export default function Home() {
       {offline && (
         <Rise style={[{ marginTop: 14, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, paddingHorizontal: 14, backgroundColor: C.ink, borderRadius: 18 }, border(), shadow(4, C.orange)]}>
           <Loop kind="pulse" duration={1200}><View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: C.red }} /></Loop>
-          <T w={600} size={14} color={C.white} style={{ flex: 1, lineHeight: 18 }}>you’re offline. showing what we saved on this phone; changes need a connection.</T>
+          <T w={600} size={14} color={C.white} style={{ flex: 1, lineHeight: 18 }}>you’re offline. changes save on this phone and sync when you’re back.</T>
         </Rise>
       )}
 
