@@ -2,7 +2,6 @@ import { Link, router, Stack, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, Button, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { daysUntil, deleteSub, listSubs, money, setStatus, TYPE_LABELS, type Subscription } from '../lib/subs';
-import { signOut } from '../lib/auth';
 import { syncReminders } from '../lib/reminders';
 import { listStyles, styles } from '../lib/styles';
 import { Summary } from '../components/Summary';
@@ -49,7 +48,7 @@ export default function Home() {
 
   return (
     <View style={styles.screen}>
-      <Stack.Screen options={{ headerRight: () => <Button title="Log out" onPress={signOut} /> }} />
+      <Stack.Screen options={{ headerRight: () => <Button title="Settings" onPress={() => router.push('/settings')} /> }} />
       <FlatList
         data={subs}
         keyExtractor={(s) => s.id}

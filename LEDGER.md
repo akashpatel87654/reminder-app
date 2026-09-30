@@ -10,8 +10,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | T4 Home summary | done | e0b8493 | Per-currency /mo + /yr totals (no FX); excludes free trials, one-time, cancelled; next-7-days line |
 | T5 Local push reminders | done | 9490a3a | Full resync on every list load (cancel all → reschedule); past-due fires once (handled keys in localStorage); iOS cap 60 soonest; tap → sub; sign-out clears |
 | T6 Auto-roll dates | done | ec30d2e | `roll_due_dates()` SQL: app RPC before every list load + hourly pg_cron; trial→auto_renew on roll; one_time never rolls |
-| T7 Email reminders | done | — | `claim_email_reminders()` SQL (insert into log = lock + dedupe) → `send-reminders` edge fn → Resend; failed send releases claim; HMAC one-click unsubscribe; cron every 15 min |
-| T8 Settings | todo | | |
+| T7 Email reminders | done | 8c050c0 | `claim_email_reminders()` SQL (insert into log = lock + dedupe) → `send-reminders` edge fn → Resend; failed send releases claim; HMAC one-click unsubscribe; cron every 15 min |
+| T8 Settings | done | — | Reminder hour, default days/currency (prefill new subs), global email toggle, CSV via native share sheet, `delete_account()` RPC, logout |
 | T9 Release | todo | | |
 
 ## Decisions

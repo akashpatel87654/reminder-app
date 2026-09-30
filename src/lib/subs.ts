@@ -108,3 +108,13 @@ export function monthlyTotals(subs: Subscription[]) {
 
 export const upcoming = (subs: Subscription[], withinDays = 7) =>
   subs.filter((s) => s.status === 'active' && daysUntil(s.next_date) >= 0 && daysUntil(s.next_date) <= withinDays);
+
+const csvCell = (v: unknown) => {
+  const s = v == null ? '' : Array.isArray(v) ? v.join(' ') : String(v);
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
+export function toCsv(subs: Subscription[]) {
+  const cols: (keyof Subscription)[] = ['name', 'price', 'currency', 'type', 'billing_cycle', 'custom_days', 'next_date',
+    'remind_days_before', 'email_enabled', 'status', 'category', 'portal_url', 'notes'];
+  return [cols.join(','), ...subs.map((s) => cols.map((c) => csvCell(s[c])).join(','))].join('\n');
+}

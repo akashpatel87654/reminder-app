@@ -3,6 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Platform, Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { Chips } from '../../components/Chips';
+import { getProfile } from '../../lib/profile';
 import { CYCLE_LABELS, formatDate, getSub, parseDate, saveSub, today, TYPE_LABELS, type SubInput } from '../../lib/subs';
 import { listStyles, styles } from '../../lib/styles';
 
@@ -26,7 +27,13 @@ export default function SubForm() {
   const set = <K extends keyof SubInput>(k: K, v: SubInput[K]) => setForm((f) => ({ ...f, [k]: v }));
 
   useEffect(() => {
-    if (isNew) return;
+    if (isNew) {
+      getProfile().then((p) => {
+        setForm((f) => ({ ...f, currency: p.currency, remind_days_before: p.default_remind_days, email_enabled: p.email_enabled }));
+        setDays(p.default_remind_days.join(', '));
+      }, () => {});
+      return;
+    }
     getSub(id).then((s) => {
       const { id: _, ...rest } = s;
       setForm(rest);
