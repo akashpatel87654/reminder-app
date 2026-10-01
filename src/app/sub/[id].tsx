@@ -106,6 +106,11 @@ export default function Detail() {
           <T mono size={11}>PER MONTH</T><T w={800} size={16}>{money(toMonthly(d, cur, true), cur)}</T>
         </View>
       </View>
+      {!!d.start_date && (
+        <View style={[{ marginTop: 10, padding: 12, paddingHorizontal: 14, borderRadius: 16, backgroundColor: C.white }, border()]}>
+          <T mono size={11}>{d.type === 'free_trial' ? 'TRIAL STARTED' : 'PURCHASED ON'}</T><T w={800} size={16}>{fmtDay(d.start_date)}</T>
+        </View>
+      )}
 
       {!!d.notes && (
         <View style={[{ marginTop: 26, padding: 18, paddingTop: 20, paddingBottom: 16, backgroundColor: C.yellow, transform: [{ rotate: '1.5deg' }] }, border(), shadow(4)]}>

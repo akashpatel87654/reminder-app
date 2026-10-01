@@ -1,13 +1,13 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Calendar } from '../../components/Calendar';
 import { useFx } from '../../components/overlays';
 import { Btn, Chip, Field, Label, Letter, RoundBtn, Rise, T, Toggle } from '../../components/ui';
 import { useStore } from '../../lib/store';
 import {
-  addDays, CATEGORIES, CURRENCIES, CYC, CYCLES, daysUntil, DOW, fmtDay, hourLabel, money, POPULAR, reminderAt,
+  addDays, CATEGORIES, nextFromStart, CURRENCIES, CYC, CYCLES, daysUntil, DOW, fmtDay, hourLabel, money, POPULAR, reminderAt,
   REMIND_OPTIONS, SYM, today, toggleDay, TYPES, when, type SubInput,
 } from '../../lib/subs';
 import { border, C, F, PALETTE, shadow } from '../../theme';
@@ -26,14 +26,29 @@ export default function SubForm() {
     }
     return {
       name: '', portal_url: null, category: 'Other', price: 0, currency: profile?.currency ?? 'INR', type: 'auto_renew',
-      billing_cycle: 'monthly', custom_days: 30, next_date: addDays(today(), 7), remind_days_before: profile?.default_remind_days ?? [2],
+      billing_cycle: 'monthly', custom_days: 30, start_date: today(), next_date: nextFromStart(today(), 'monthly', 30)!, remind_days_before: profile?.default_remind_days ?? [2],
       email_enabled: profile?.email_enabled ?? true, status: 'active', notes: null, color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
     };
   });
   const [price, setPrice] = useState(existing ? String(existing.price) : '');
-  const [cal, setCal] = useState(false);
+  const [cal, setCal] = useState<null | 'next' | 'start' | 'remind'>(null);
   const [saving, setSaving] = useState(false);
   const set = (p: Partial<SubInput>) => setForm((x) => ({ ...x, ...p }));
+  // Changing the purchase date or the cycle re-derives the next renewal (one-off plans keep theirs).
+  const setPlan = (p: Partial<SubInput>) => setForm((x) => {
+    const y = { ...x, ...p };
+    const next = y.start_date ? nextFromStart(y.start_date, y.billing_cycle, y.custom_days) : null;
+    return next ? { ...y, next_date: next } : y;
+  });
+  // iOS drops a sheet presented while the keyboard is still closing (and the state would then be
+  // stuck "open"), so close the keyboard first and open once it's gone.
+  const openCal = (k: 'next' | 'start' | 'remind') => {
+    if (!Keyboard.isVisible()) return setCal(k);
+    const sub = Keyboard.addListener('keyboardDidHide', () => { sub.remove(); setCal(k); });
+    Keyboard.dismiss();
+  };
+  // A picked reminder date is stored as "N days before", so it repeats every cycle.
+  const customDays = f.remind_days_before.filter((d) => !REMIND_OPTIONS.includes(d));
 
   const days = daysUntil(f.next_date);
   const typeIdx = TYPES.findIndex((t) => t[0] === f.type);
@@ -131,20 +146,28 @@ export default function SubForm() {
 
         <Label>BILLING CYCLE</Label>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          {CYCLES.map(([k, label], i) => <Chip key={k} i={i} label={label} on={f.billing_cycle === k} onPress={() => set({ billing_cycle: k })} />)}
+          {CYCLES.map(([k, label], i) => <Chip key={k} i={i} label={label} on={f.billing_cycle === k} onPress={() => setPlan({ billing_cycle: k })} />)}
         </View>
         {f.billing_cycle === 'custom_days' && (
           <Rise style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <T w={700}>every</T>
-            <TextInput value={f.custom_days ? String(f.custom_days) : ''} onChangeText={(v) => set({ custom_days: parseInt(v.replace(/\D/g, ''), 10) || null })}
+            <TextInput value={f.custom_days ? String(f.custom_days) : ''} onChangeText={(v) => setPlan({ custom_days: parseInt(v.replace(/\D/g, ''), 10) || null })}
               keyboardType="number-pad" maxLength={3} accessibilityLabel="Days per cycle"
               style={[{ width: 80, height: 44, borderRadius: 12, textAlign: 'center', fontFamily: F.mono, fontSize: 18, backgroundColor: C.white, color: C.ink }, border()]} />
             <T w={700}>days</T>
           </Rise>
         )}
 
-        <Label>{f.type === 'free_trial' ? 'TRIAL ENDS' : f.type === 'expires' ? 'EXPIRES ON' : 'NEXT DATE'}</Label>
-        <Pressable onPress={() => setCal(true)} style={({ pressed }) => [{ height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, borderRadius: 16, backgroundColor: C.white }, border(),
+        <Label>{f.type === 'free_trial' ? 'TRIAL STARTED ON' : 'PURCHASED ON'}</Label>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Purchased on ${f.start_date ? fmtDay(f.start_date) : 'not set'}`} onPress={() => openCal('start')}
+          style={({ pressed }) => [{ height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, borderRadius: 16, backgroundColor: C.white }, border(),
+          pressed ? { transform: [{ translateX: 3 }, { translateY: 3 }] } : shadow(4)]}>
+          <T w={700} size={17}>🛒 {f.start_date ? fmtDay(f.start_date) : 'add date'}</T>
+          {f.billing_cycle !== 'one_time' && !!f.start_date && <T mono size={12}>sets next date ↓</T>}
+        </Pressable>
+
+        <Label>{f.type === 'free_trial' ? 'TRIAL ENDS' : f.type === 'expires' ? 'EXPIRES ON' : 'NEXT RENEWAL'}</Label>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Next date ${fmtDay(f.next_date)}`} onPress={() => openCal('next')} style={({ pressed }) => [{ height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, borderRadius: 16, backgroundColor: C.white }, border(),
           pressed ? { transform: [{ translateX: 3 }, { translateY: 3 }] } : shadow(4)]}>
           <T w={700} size={17}>📅 {fmtDay(f.next_date)}</T>
           <View style={[{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, backgroundColor: C.lime }, border(2)]}><T w={800} size={12}>{when(days)}</T></View>
@@ -156,6 +179,10 @@ export default function SubForm() {
             <Chip key={r} i={i} label={r === 0 ? 'day of' : `${r}d before`} on={f.remind_days_before.includes(r)}
               onPress={() => set({ remind_days_before: toggleDay(f.remind_days_before, r) })} />
           ))}
+          {customDays.map((d) => (
+            <Chip key={`c${d}`} label={`${fmtDay(addDays(f.next_date, -d))} ✕`} on onPress={() => set({ remind_days_before: toggleDay(f.remind_days_before, d) })} />
+          ))}
+          <Chip label="📅 pick a date" on={false} onPress={() => openCal('remind')} />
         </View>
 
         <View style={[{ marginTop: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 18, backgroundColor: C.white }, border(), shadow(4)]}>
@@ -183,7 +210,16 @@ export default function SubForm() {
       {/* Solid strip under the status bar so scrolled content doesn't run beneath the clock. */}
       <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: C.cream }} />
 
-      {cal && <Calendar visible value={f.next_date} onPick={(d) => set({ next_date: d })} onClose={() => setCal(false)} />}
+      {cal === 'next' && <Calendar visible value={f.next_date} onPick={(d) => set({ next_date: d })} onClose={() => setCal(null)} />}
+      {cal === 'start' && (
+        <Calendar visible title="PURCHASED ON" value={f.start_date ?? today()} min={addDays(today(), -365 * 5)} max={today()}
+          onPick={(d) => setPlan({ start_date: d })} onClose={() => setCal(null)} />
+      )}
+      {cal === 'remind' && (
+        <Calendar visible title="REMIND ME ON" value={addDays(f.next_date, -Math.min(2, Math.max(0, days)))} min={today()} max={f.next_date}
+          onPick={(d) => set({ remind_days_before: toggleDay(f.remind_days_before.filter((x) => x !== daysUntil(f.next_date) - daysUntil(d)), daysUntil(f.next_date) - daysUntil(d)) })}
+          onClose={() => setCal(null)} />
+      )}
     </KeyboardAvoidingView>
   );
 }

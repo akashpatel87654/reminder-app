@@ -29,6 +29,8 @@ Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisio
 
 | D8 Rename to Pingo | done | — | App renamed SubTrack → Pingo (name, slug, scheme `pingo`, bundle/package `com.akashpatel.pingo`, all copy, emails, CSV filename). New mark: lime P on ink tile with a pink "ping" dot (`scripts/make_icons.py` regenerates all icons; splash dot pulses). Applied migrations left untouched. Expo Go's loading card shows its own cached icon — real builds use the new one |
 
+| D9 Purchase date + pick-a-date reminders | done | — | New `start_date` (0008, pushed live). Form: PURCHASED ON (past dates) derives NEXT RENEWAL for monthly/quarterly/yearly/custom (day-of-month kept, clamped); one-off plans keep a manual date. NAG ME gets "📅 pick a date" (between today and renewal) stored as N days before, so it repeats each cycle and drives both push and email. Detail shows PURCHASED ON. Verified on iOS: Aug 18 → Oct 18, custom Oct 13 reminder listed at 9 AM, real notification fired. Fixed: calendar opened while keyboard was closing got stuck |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.

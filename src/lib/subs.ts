@@ -20,6 +20,7 @@ export type Subscription = {
   status: 'active' | 'cancelled';
   notes: string | null;
   color: string;
+  start_date: string | null; // purchased / started on
 };
 export type SubInput = Omit<Subscription, 'id'>;
 
@@ -58,6 +59,31 @@ export const addDays = (s: string, n: number) => {
   return formatDate(d);
 };
 export const daysUntil = (s: string) => Math.round((parseDate(s).getTime() - parseDate(today()).getTime()) / 86_400_000);
+
+// Renewal date `n` cycles after `start`, keeping the day of month (clamped: Jan 31 + 1 month = Feb 28).
+function stepCycle(start: string, cycle: BillingCycle, customDays: number | null, n: number) {
+  const d = parseDate(start);
+  if (cycle === 'custom_days') {
+    d.setDate(d.getDate() + n * (customDays || 30));
+    return formatDate(d);
+  }
+  const months = { monthly: 1, quarterly: 3, yearly: 12 }[cycle as 'monthly'] ?? 0;
+  const day = d.getDate();
+  const t = new Date(d.getFullYear(), d.getMonth() + n * months, 1);
+  t.setDate(Math.min(day, new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate()));
+  return formatDate(t);
+}
+
+// Next renewal on/after today for a plan bought on `start` (null for one-off plans).
+export function nextFromStart(start: string, cycle: BillingCycle, customDays: number | null) {
+  if (cycle === 'one_time') return null;
+  const t = today();
+  for (let n = 1; n < 10_000; n++) {
+    const next = stepCycle(start, cycle, customDays, n);
+    if (next >= t) return next;
+  }
+  return null;
+}
 
 export const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -157,7 +183,7 @@ const csvCell = (v: unknown) => {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 export function toCsv(subs: Subscription[]) {
-  const cols: (keyof Subscription)[] = ['name', 'price', 'currency', 'type', 'billing_cycle', 'custom_days', 'next_date',
+  const cols: (keyof Subscription)[] = ['name', 'price', 'currency', 'type', 'billing_cycle', 'custom_days', 'start_date', 'next_date',
     'remind_days_before', 'email_enabled', 'status', 'category', 'portal_url', 'notes'];
   return [cols.join(','), ...subs.map((s) => cols.map((c) => csvCell(s[c])).join(','))].join('\n');
 }
