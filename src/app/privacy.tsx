@@ -6,7 +6,7 @@ import { border, C, shadow } from '../theme';
 const SECTIONS = [
   { n: '01', color: C.lime, title: 'what we store', body: 'your email, the subscriptions you add, and your timezone and reminder time.' },
   { n: '02', color: C.pink, title: 'what we don’t', body: 'no bank logins, no card numbers, no reading your inbox or texts. we never sell your data.' },
-  { n: '03', color: C.purple, title: 'who helps us', body: 'Supabase stores your account and subscriptions. Resend sends reminder emails. push reminders are scheduled on your phone itself.' },
+  { n: '03', color: C.purple, title: 'who helps us', body: 'Supabase stores your account and subscriptions. Gmail sends reminder emails. push reminders are scheduled on your phone itself.' },
   { n: '04', color: C.yellow, title: 'your controls', body: 'export everything as CSV or delete your account anytime in settings. deleting removes all your data.' },
 ];
 

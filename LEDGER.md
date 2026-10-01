@@ -40,15 +40,14 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 
 ## Needs owner
 - Live Supabase project `qohrtjigdubqbzwnmdgz`: linked; all 7 migrations pushed (2026-10-01); auth set to 6-digit codes; anon access verified blocked (RLS + revoked RPCs). Production builds use it via `.env.production`.
-- BLOCKER for real sign-in: free-tier Supabase refuses custom email templates while using its built-in mailer, so live login emails still contain a link, not the code the app asks for. Fix = custom SMTP (Resend) in Auth → SMTP settings, then `npx supabase config push` (templates are already in config.toml; the push will show only the two templates + subjects).
+- BLOCKER for real sign-in: free-tier Supabase refuses custom email templates while using its built-in mailer, so live login emails still contain a link, not the code the app asks for. Fix = custom SMTP (Gmail app password) in Auth → SMTP settings, then `npx supabase config push` (templates are already in config.toml; the push will show only the two templates + subjects).
 - `send-reminders` cron runs every 15 min on the live DB but has no Vault secrets / deployed function yet, so it no-ops with an error in the cron log until the email step is done.
 - Enable extensions `pg_cron` + `pg_net`; add Vault secrets `project_url`, `cron_secret` (see 0003_cron.sql).
-- Deploy email function: `supabase functions deploy send-reminders` and set secrets
-  `CRON_SECRET` (= vault cron_secret), `RESEND_API_KEY`, `EMAIL_FROM` (e.g. `SubTrack <reminders@yourdomain>`, domain verified in Resend).
+- Email = a Gmail account + app password (no domain). Reminder function sends over SMTP (nodemailer, port 465; hosted functions block 25/587). Function secrets: `CRON_SECRET` (= vault cron_secret), `SMTP_USER` (the Gmail), `SMTP_PASS` (app password — owner sets it), optional `EMAIL_FROM`. Same Gmail goes in Supabase Auth → SMTP for login codes, which also unlocks the code template (`npx supabase config push`). Verified locally against Mailpit SMTP: 4 due reminders sent, re-run sent 0. Gmail limit ~500/day.
 - Hosted Supabase: Auth → Email Templates → paste `supabase/templates/login-code.html` into BOTH "Magic Link" and "Confirm signup" (subject: `your SubTrack code`). Without it users get a link, not the 6-digit code the app asks for.
 - Custom SMTP (Resend) recommended in Supabase Auth — the built-in mailer is rate-limited to a few emails/hour.
 - Server push is blocked on EAS login (needs an EAS projectId for push tokens). No server push in v1: local notifications cover the app channel, email covers the backup. Add push token + server send if users report missed reminders when they never open the app for 60+ reminders' worth of time.
 - Local notifications work in Expo Go; server push would need a dev build.
 - Optional: Supabase custom domain → set function secret `PUBLIC_FUNCTION_URL=https://<domain>/functions/v1/send-reminders` to get the styled unsubscribe page with undo.
-- Contact email (privacy screen + PRIVACY.md): heatmonks.venture@gmail.com. Not usable as Resend `EMAIL_FROM` — Resend only sends from a verified domain.
+- Contact email (privacy screen + PRIVACY.md): heatmonks.venture@gmail.com.
 - Release: `npx eas-cli@latest login` → `npx eas-cli@latest build --profile preview --platform all` for internal testers; host PRIVACY.md at a public URL for the store listings.

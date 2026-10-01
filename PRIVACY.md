@@ -18,7 +18,7 @@ We never ask for or store card numbers, bank details, or passwords for other ser
 
 ## Who processes it
 - Supabase — database and sign-in.
-- Resend — sending reminder emails.
+- Gmail — sending reminder and sign-in emails.
 
 We don't sell your data, show ads, or use tracking or analytics SDKs.
 

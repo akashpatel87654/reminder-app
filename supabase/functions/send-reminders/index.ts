@@ -2,6 +2,7 @@
 // Public GET/POST ?unsub=<id>&sig=<hmac>: one-click unsubscribe for that subscription.
 // Public POST ?resub=<id>&sig=<hmac>: the "oops, undo" button on the unsubscribe page.
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import nodemailer from 'npm:nodemailer@6';
 
 const env = (k: string) => {
   const v = Deno.env.get(k);
@@ -15,6 +16,23 @@ const SECRET = env('CRON_SECRET');
 // (this function's URL on your custom domain) to switch links + pages to the styled HTML.
 const PUBLIC_URL = Deno.env.get('PUBLIC_FUNCTION_URL');
 const SELF_URL = PUBLIC_URL ?? `${env('SUPABASE_URL')}/functions/v1/send-reminders`;
+
+// Mail goes out over SMTP — by default a Gmail account with an app password (no domain needed).
+// Port 465 (implicit TLS): hosted edge functions block outbound 25 and 587.
+// ponytail: Gmail caps at ~500 recipients/day; move to a provider with a domain past that.
+let mailer: ReturnType<typeof nodemailer.createTransport> | undefined;
+function smtp() {
+  if (!mailer) {
+    const port = Number(Deno.env.get('SMTP_PORT') ?? 465);
+    mailer = nodemailer.createTransport({
+      host: Deno.env.get('SMTP_HOST') ?? 'smtp.gmail.com',
+      port,
+      secure: port === 465,
+      auth: Deno.env.get('SMTP_PASS') ? { user: env('SMTP_USER'), pass: env('SMTP_PASS') } : undefined,
+    });
+  }
+  return mailer;
+}
 
 type Cycle = 'monthly' | 'quarterly' | 'yearly' | 'custom_days' | 'one_time';
 export type Due = {
@@ -121,19 +139,14 @@ ${cta}
 async function send(r: Due) {
   const unsub = `${SELF_URL}?unsub=${r.subscription_id}&sig=${await sign(r.subscription_id)}`;
   const { subject, html, text } = renderEmail(r, unsub);
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: env('EMAIL_FROM'),
-      to: r.email,
-      subject,
-      html,
-      text,
-      headers: { 'List-Unsubscribe': `<${unsub}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
-    }),
+  await smtp().sendMail({
+    from: Deno.env.get('EMAIL_FROM') ?? `SubTrack <${env('SMTP_USER')}>`,
+    to: r.email,
+    subject,
+    html,
+    text,
+    headers: { 'List-Unsubscribe': `<${unsub}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
   });
-  if (!res.ok) throw new Error(`resend ${res.status}: ${await res.text()}`);
 }
 
 // Landing page for unsub (undo = null → show the "oops, undo" form) or resub (undo = null, done = true).
