@@ -39,7 +39,9 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 - Shared state: `src/lib/store.tsx` (subs + profile + notif permission), cached per user in localStorage for offline reads; every mutation resyncs local notifications.
 
 ## Needs owner
-- Live Supabase project `qohrtjigdubqbzwnmdgz` wired via `.env.production` (production builds; local dev keeps `.env`). Verified a production bundle points at it. Pending: owner runs `npx supabase login` + `npx supabase link --project-ref qohrtjigdubqbzwnmdgz`, then migrations get pushed (`db push`).
+- Live Supabase project `qohrtjigdubqbzwnmdgz`: linked; all 7 migrations pushed (2026-10-01); auth set to 6-digit codes; anon access verified blocked (RLS + revoked RPCs). Production builds use it via `.env.production`.
+- BLOCKER for real sign-in: free-tier Supabase refuses custom email templates while using its built-in mailer, so live login emails still contain a link, not the code the app asks for. Fix = custom SMTP (Resend) in Auth → SMTP settings, then `npx supabase config push` (templates are already in config.toml; the push will show only the two templates + subjects).
+- `send-reminders` cron runs every 15 min on the live DB but has no Vault secrets / deployed function yet, so it no-ops with an error in the cron log until the email step is done.
 - Enable extensions `pg_cron` + `pg_net`; add Vault secrets `project_url`, `cron_secret` (see 0003_cron.sql).
 - Deploy email function: `supabase functions deploy send-reminders` and set secrets
   `CRON_SECRET` (= vault cron_secret), `RESEND_API_KEY`, `EMAIL_FROM` (e.g. `SubTrack <reminders@yourdomain>`, domain verified in Resend).
