@@ -31,6 +31,8 @@ Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisio
 
 | D9 Purchase date + pick-a-date reminders | done | — | New `start_date` (0008, pushed live). Form: PURCHASED ON (past dates) derives NEXT RENEWAL for monthly/quarterly/yearly/custom (day-of-month kept, clamped); one-off plans keep a manual date. NAG ME gets "📅 pick a date" (between today and renewal) stored as N days before, so it repeats each cycle and drives both push and email. Detail shows PURCHASED ON. Verified on iOS: Aug 18 → Oct 18, custom Oct 13 reminder listed at 9 AM, real notification fired. Fixed: calendar opened while keyboard was closing got stuck |
 
+| D10 Live email | done | — | Gmail SMTP (apppingo.app@gmail.com, app password) set in Supabase Auth + function secret. Pingo code template pushed. Verified live 2026-10-01: sign-in code email delivered to inbox; reminder function sent 1 real email for a due sub, re-run sent 0 (dedupe); test data removed. CRON_SECRET rotated, vault `cron_secret` matches |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
@@ -44,8 +46,6 @@ Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisio
 
 ## Needs owner
 - Live Supabase project `qohrtjigdubqbzwnmdgz`: linked; all 7 migrations pushed (2026-10-01); auth set to 6-digit codes; anon access verified blocked (RLS + revoked RPCs). Production builds use it via `.env.production`.
-- BLOCKER for real sign-in: free-tier Supabase refuses custom email templates while using its built-in mailer, so live login emails still contain a link, not the code the app asks for. Fix = custom SMTP (Gmail app password) in Auth → SMTP settings, then `npx supabase config push` (templates are already in config.toml; the push will show only the two templates + subjects).
-- `send-reminders` cron runs every 15 min on the live DB but has no Vault secrets / deployed function yet, so it no-ops with an error in the cron log until the email step is done.
 - Enable extensions `pg_cron` + `pg_net`; add Vault secrets `project_url`, `cron_secret` (see 0003_cron.sql).
 - Email = a Gmail account + app password (no domain). Reminder function sends over SMTP (nodemailer, port 465; hosted functions block 25/587). Function secrets: `CRON_SECRET` (= vault cron_secret), `SMTP_USER` (the Gmail), `SMTP_PASS` (app password — owner sets it), optional `EMAIL_FROM`. Same Gmail goes in Supabase Auth → SMTP for login codes, which also unlocks the code template (`npx supabase config push`). Verified locally against Mailpit SMTP: 4 due reminders sent, re-run sent 0. Gmail limit ~500/day.
 - Hosted Supabase: Auth → Email Templates → paste `supabase/templates/login-code.html` into BOTH "Magic Link" and "Confirm signup" (subject: `your SubTrack code`). Without it users get a link, not the 6-digit code the app asks for.
