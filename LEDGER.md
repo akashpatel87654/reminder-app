@@ -35,6 +35,8 @@ Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisio
 
 | D11 Installable Android build | done | — | Local release APK (no Expo account needed): `cd android && NODE_ENV=production ./gradlew assembleRelease` with JDK 17 → `android/app/build/outputs/apk/release/app-release.apk` (84 MB, arm64/armv7/x86_64). Embeds only the live Supabase URL; verified cold start standalone on emulator. Signed with the debug key: fine for sideloading, NOT for Play Store (needs EAS/upload key). `eas.json` preview profile now builds an APK too |
 
+| D12 Play Store package | done | — | Signed AAB via `scripts/build_aab.sh` (upload key in `~/.pingo/`, outside the public repo; SHA-256 A1:DD:29…02:E9). Blocked SYSTEM_ALERT_WINDOW + storage permissions. Store art via `scripts/make_store_assets.py` → `store/` (512 icon, 1024×500 feature graphic, 7 framed 1080×1920 screenshots from the native iOS build). `PLAYSTORE.md` = copy-paste listing + Data safety + content rating answers; `PRIVACY.md` updated (deletion section = Play delete-account URL). Open: reviewer login (email-code only) — see PLAYSTORE.md §5 |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
