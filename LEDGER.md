@@ -33,6 +33,8 @@ Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisio
 
 | D10 Live email | done | — | Gmail SMTP (apppingo.app@gmail.com, app password) set in Supabase Auth + function secret. Pingo code template pushed. Verified live 2026-10-01: sign-in code email delivered to inbox; reminder function sent 1 real email for a due sub, re-run sent 0 (dedupe); test data removed. CRON_SECRET rotated, vault `cron_secret` matches |
 
+| D11 Installable Android build | done | — | Local release APK (no Expo account needed): `cd android && NODE_ENV=production ./gradlew assembleRelease` with JDK 17 → `android/app/build/outputs/apk/release/app-release.apk` (84 MB, arm64/armv7/x86_64). Embeds only the live Supabase URL; verified cold start standalone on emulator. Signed with the debug key: fine for sideloading, NOT for Play Store (needs EAS/upload key). `eas.json` preview profile now builds an APK too |
+
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
 - `react-dom` pinned to 19.2.3 via `overrides` — expo's optional peer pulled 19.3.0 which conflicts with react 19.2.3.
