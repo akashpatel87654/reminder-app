@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "SubTrack",
-    "slug": "subtrack",
+    "name": "Pingo",
+    "slug": "pingo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.akashpatel.subtrack"
+      "bundleIdentifier": "com.akashpatel.pingo"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.akashpatel.subtrack"
+      "package": "com.akashpatel.pingo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,7 +43,7 @@
         }
       ]
     ],
-    "scheme": "subtrack",
+    "scheme": "pingo",
     "experiments": {
       "typedRoutes": true
     },

@@ -28,7 +28,7 @@ export default function Onboard() {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingTop: 10 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={[{ width: 10, height: 10, borderRadius: 5, backgroundColor: C.lime }, border(2)]} />
-          <T mono={500} size={13}>SubTrack</T>
+          <T mono={500} size={13}>Pingo</T>
         </View>
         <Pressable accessibilityRole="button" onPress={finish} hitSlop={6} style={({ pressed }) => [{ height: 38, paddingHorizontal: 16, borderRadius: 999, backgroundColor: pressed ? C.yellow : C.white, justifyContent: 'center' }, border(2)]}>
           <T w={700} size={14}>skip</T>

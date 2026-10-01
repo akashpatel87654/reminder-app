@@ -134,7 +134,7 @@ export default function Login() {
             <View style={[{ paddingVertical: 10, paddingHorizontal: 18, borderRadius: 999, backgroundColor: C.red, transform: [{ rotate: '-5deg' }] }, border(3), shadow(4)]}><T w={800} size={18} color={C.white}>in 2 days 👀</T></View>
           </Loop>
           <Loop kind="bob" duration={2800} delay={1100} style={{ position: 'absolute', right: 20, top: 204 }}>
-            <View style={[{ width: 70, height: 70, borderRadius: 35, backgroundColor: C.purple, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '8deg' }] }, border(3), shadow(4)]}><T w={800} size={34}>S</T></View>
+            <View style={[{ width: 70, height: 70, borderRadius: 35, backgroundColor: C.purple, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '8deg' }] }, border(3), shadow(4)]}><T w={800} size={34}>P</T></View>
           </Loop>
           <Loop kind="spin" duration={9000} style={{ position: 'absolute', left: 16, top: 196 }}>
             <View style={[{ width: 54, height: 54, borderRadius: 27, backgroundColor: C.yellow, alignItems: 'center', justifyContent: 'center' }, border(3)]}><T size={28}>✦</T></View>
@@ -142,7 +142,7 @@ export default function Login() {
         </View>
         <Rise delay={100} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={[{ width: 10, height: 10, borderRadius: 5, backgroundColor: C.lime }, border(2)]} />
-          <T mono={500} size={13}>SubTrack</T>
+          <T mono={500} size={13}>Pingo</T>
         </Rise>
         <Rise delay={180} style={{ marginTop: 10 }}>
           <T w={800} size={46} style={{ lineHeight: 46, letterSpacing: -1.8 }}>never get</T>

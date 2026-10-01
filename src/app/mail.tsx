@@ -47,9 +47,9 @@ export default function Mail() {
       <Rise style={{ paddingHorizontal: 18, paddingTop: 16 }}>
         <T accessibilityRole="header" w={800} size={22} style={{ lineHeight: 25, letterSpacing: -0.5 }}>{subject}</T>
         <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={[{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.lime, alignItems: 'center', justifyContent: 'center' }, border()]}><T w={800} size={18}>S</T></View>
+          <View style={[{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.lime, alignItems: 'center', justifyContent: 'center' }, border()]}><T w={800} size={18}>P</T></View>
           <View>
-            <T w={800} size={14}>SubTrack</T>
+            <T w={800} size={14}>Pingo</T>
             <T mono size={12}>to {profile?.email ?? 'me'} · {hourLabel(profile?.reminder_hour ?? 9)}</T>
           </View>
         </View>
@@ -58,8 +58,8 @@ export default function Mail() {
       <Rise delay={80} style={[{ marginHorizontal: 14, marginTop: 12, backgroundColor: C.white, borderRadius: 22, overflow: 'hidden' }, border(), shadow(5)]}>
         <View style={{ backgroundColor: C.lime, borderBottomWidth: 2.5, borderColor: C.ink, paddingVertical: 12, paddingHorizontal: 18, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ width: 26, height: 26, borderRadius: 8, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center' }}><T w={800} size={15} color={C.lime}>S</T></View>
-            <T w={800} size={17}>SubTrack</T>
+            <View style={{ width: 26, height: 26, borderRadius: 8, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center' }}><T w={800} size={15} color={C.lime}>P</T></View>
+            <T w={800} size={17}>Pingo</T>
           </View>
           <T mono size={11}>REMINDER</T>
         </View>
@@ -77,7 +77,7 @@ export default function Mail() {
               </View>
             ))}
           </View>
-          <Btn style={{ marginTop: 18 }} h={54} size={15} title={portal ? `manage at ${portal} ↗` : 'open in SubTrack →'}
+          <Btn style={{ marginTop: 18 }} h={54} size={15} title={portal ? `manage at ${portal} ↗` : 'open in Pingo →'}
             onPress={() => (s.portal_url ? Linking.openURL(s.portal_url) : router.replace({ pathname: '/sub/[id]', params: { id: s.id } }))} />
           <View style={{ marginTop: 12, flexDirection: 'row', justifyContent: 'center', gap: 6 }}>
             <T size={13}>already cancelled?</T>
@@ -90,7 +90,7 @@ export default function Mail() {
             {s.email_enabled ? linkText(`unsubscribe from ${s.name} emails`, unsubscribe, C.redInk) : <T mono size={12}>emails for {s.name} are off</T>}
             {linkText('reminder settings', () => router.navigate('/settings'))}
           </View>
-          <T mono size={12} style={{ marginTop: 10 }}>SubTrack · sent with ♥</T>
+          <T mono size={12} style={{ marginTop: 10 }}>Pingo · sent with ♥</T>
         </View>
       </Rise>
     </Screen>

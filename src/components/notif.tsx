@@ -8,8 +8,8 @@ import { Sheet, Tile, useFx } from './overlays';
 import { Btn, T } from './ui';
 
 const STEPS = Platform.OS === 'ios'
-  ? ['open settings', 'notifications → SubTrack', 'switch “allow notifications” on']
-  : ['open android settings', 'apps → SubTrack → notifications', 'switch “allow notifications” on'];
+  ? ['open settings', 'notifications → Pingo', 'switch “allow notifications” on']
+  : ['open android settings', 'apps → Pingo → notifications', 'switch “allow notifications” on'];
 
 // Push is effectively off when the OS blocks it or the user switched it off in settings.
 export function usePushOff() {
@@ -61,7 +61,7 @@ export function NotifOffSheet({ visible, onClose }: { visible: boolean; onClose:
       <Tile emoji="🔕" bg={C.paper} wiggle />
       <T accessibilityRole="header" w={800} size={34} style={{ marginTop: 20, letterSpacing: -1.2, lineHeight: 36 }}>notifs are off</T>
       <T size={16} style={{ marginTop: 10, lineHeight: 22 }}>
-        {blockedByOs ? `${Platform.OS === 'ios' ? 'iOS' : 'android'} is blocking SubTrack, so we can’t ping you before charges.` : 'you switched push off, so we can’t ping you before charges.'} email reminders still work.
+        {blockedByOs ? `${Platform.OS === 'ios' ? 'iOS' : 'android'} is blocking Pingo, so we can’t ping you before charges.` : 'you switched push off, so we can’t ping you before charges.'} email reminders still work.
       </T>
       {blockedByOs && (
         <View style={{ marginTop: 18, gap: 10 }}>

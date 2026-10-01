@@ -25,10 +25,11 @@ export function Splash() {
         </Loop>
         <PopIn delay={100}>
           <View style={[{ width: 148, height: 148, borderRadius: 42, backgroundColor: C.ink, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-6deg' }] }, border(3), shadow(8, C.pink)]}>
-            <T w={800} size={96} color={C.lime} style={{ letterSpacing: -4, lineHeight: 110 }}>S</T>
+            <T w={800} size={96} color={C.lime} style={{ letterSpacing: -4, lineHeight: 110 }}>P</T>
           </View>
-          <Loop kind="spin" duration={5000} style={{ position: 'absolute', top: -18, right: -20 }}>
-            <View style={[{ width: 54, height: 54, borderRadius: 27, backgroundColor: C.yellow, alignItems: 'center', justifyContent: 'center' }, border(3)]}><T size={24}>✦</T></View>
+          {/* The "ping": a notification dot on the P, pulsing. */}
+          <Loop kind="pulse" duration={1300} style={{ position: 'absolute', top: -12, right: -12 }}>
+            <View style={[{ width: 46, height: 46, borderRadius: 23, backgroundColor: C.pink }, border(3)]} />
           </Loop>
           <PopIn delay={750} style={{ position: 'absolute', bottom: -14, left: -24 }}>
             <View style={[{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, backgroundColor: C.red, transform: [{ rotate: '-10deg' }] }, border()]}>
@@ -36,7 +37,7 @@ export function Splash() {
             </View>
           </PopIn>
         </PopIn>
-        <Rise delay={450} style={{ marginTop: 34 }}><T w={800} size={46} style={{ letterSpacing: -2 }}>SubTrack</T></Rise>
+        <Rise delay={450} style={{ marginTop: 34 }}><T w={800} size={46} style={{ letterSpacing: -2 }}>Pingo</T></Rise>
         <Rise delay={550} style={{ marginTop: 6 }}><T mono size={13}>subscriptions, handled.</T></Rise>
       </Pressable>
     </Animated.View>

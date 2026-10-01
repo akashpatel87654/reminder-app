@@ -1,4 +1,4 @@
-# SubTrack — Subscription Reminder App
+# Pingo — Subscription Reminder App
 
 ## Stack
 - App: React Native + Expo (iOS + Android, one codebase), Expo Router

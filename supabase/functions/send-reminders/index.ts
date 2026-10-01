@@ -111,7 +111,7 @@ export function renderEmail(r: Due, unsubUrl: string) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#FFFFFF;border:2.5px solid #141414;border-radius:22px;box-shadow:5px 5px 0 #141414;border-collapse:separate;overflow:hidden;color:#141414;font-family:${SANS}">
 <tr><td style="background:#C6F432;border-bottom:2.5px solid #141414;padding:12px 18px;border-radius:20px 20px 0 0">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-<td style="font-family:${SANS};font-size:17px;font-weight:800;color:#141414"><span style="display:inline-block;width:26px;height:26px;line-height:26px;border-radius:8px;background:#141414;color:#C6F432;text-align:center;font-size:15px;vertical-align:middle">S</span>&nbsp; <span style="vertical-align:middle">SubTrack</span></td>
+<td style="font-family:${SANS};font-size:17px;font-weight:800;color:#141414"><span style="display:inline-block;width:26px;height:26px;line-height:26px;border-radius:8px;background:#141414;color:#C6F432;text-align:center;font-size:15px;vertical-align:middle">P</span>&nbsp; <span style="vertical-align:middle">Pingo</span></td>
 <td align="right" style="font-family:${MONO};font-size:11px;color:#141414">REMINDER</td>
 </tr></table></td></tr>
 <tr><td style="padding:22px 18px">
@@ -127,7 +127,7 @@ ${cta}
 <tr><td style="padding:16px 18px;background:#FFF8EC;border-top:2.5px solid #141414;border-radius:0 0 20px 20px;font-family:${MONO};font-size:12px;line-height:1.5;color:#141414">
 <div>you’re getting this because email reminders are on for ${name}.</div>
 <div style="margin-top:8px"><a href="${esc(unsubUrl)}" style="color:#141414;text-decoration:underline">unsubscribe from ${name} emails</a></div>
-<div style="margin-top:10px">SubTrack · sent with ♥</div>
+<div style="margin-top:10px">Pingo · sent with ♥</div>
 </td></tr>
 </table></td></tr></table></body></html>`;
   const text = `${head}\n\n${msg}\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n` +
@@ -140,7 +140,7 @@ async function send(r: Due) {
   const unsub = `${SELF_URL}?unsub=${r.subscription_id}&sig=${await sign(r.subscription_id)}`;
   const { subject, html, text } = renderEmail(r, unsub);
   await smtp().sendMail({
-    from: Deno.env.get('EMAIL_FROM') ?? `SubTrack <${env('SMTP_USER')}>`,
+    from: Deno.env.get('EMAIL_FROM') ?? `Pingo <${env('SMTP_USER')}>`,
     to: r.email,
     subject,
     html,
@@ -161,7 +161,7 @@ export function renderPage(name: string, resubscribed: boolean, undoAction: stri
     ? `<button type="button" disabled style="${btn};opacity:.55;box-shadow:none;cursor:default">resubscribed ✓</button>`
     : `<form method="post" action="${esc(undoAction)}" style="margin:0"><button type="submit" style="${btn};cursor:pointer">oops, undo</button></form>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">${FONTS}<title>${esc(title)} · SubTrack</title></head>
+<meta name="robots" content="noindex">${FONTS}<title>${esc(title)} · Pingo</title></head>
 <body style="margin:0;min-height:100vh;background:#FFF8EC;color:#141414;font-family:${SANS};display:flex;align-items:center;justify-content:center">
 <main style="width:100%;max-width:420px;padding:24px 28px;box-sizing:border-box">
 <div style="width:110px;height:110px;border-radius:50%;background:#C6F432;border:3px solid #141414;box-shadow:6px 6px 0 #141414;display:flex;align-items:center;justify-content:center;font-size:58px;font-weight:800;transform:rotate(-8deg)">✓</div>
@@ -190,8 +190,8 @@ async function toggle(req: Request, url: URL, param: 'unsub' | 'resub') {
 }
 
 export const plainPage = (name: string, resubscribed: boolean) => resubscribed
-  ? `SubTrack ✓ you're back in.\n\nEmails about ${name} are back on. We'll write before it charges.`
-  : `SubTrack ✓ you're unsubscribed.\n\nNo more emails about ${name}. Push reminders in the app still work.\n\nChanged your mind? Open SubTrack → ${name} → edit → turn on "email me too".\nOther subs keep emailing as usual.`;
+  ? `Pingo ✓ you're back in.\n\nEmails about ${name} are back on. We'll write before it charges.`
+  : `Pingo ✓ you're unsubscribed.\n\nNo more emails about ${name}. Push reminders in the app still work.\n\nChanged your mind? Open Pingo → ${name} → edit → turn on "email me too".\nOther subs keep emailing as usual.`;
 
 if (import.meta.main) Deno.serve(async (req) => {
   const url = new URL(req.url);

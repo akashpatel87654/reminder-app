@@ -1,4 +1,4 @@
-// Design tokens from the SubTrack design (neo-brutalist: ink borders, hard offset shadows).
+// Design tokens from the Pingo design (neo-brutalist: ink borders, hard offset shadows).
 export const C = {
   ink: '#141414',
   cream: '#FFF8EC',

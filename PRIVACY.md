@@ -1,8 +1,8 @@
-# SubTrack Privacy Policy
+# Pingo Privacy Policy
 
 _Last updated: 2026-09-30_
 
-SubTrack helps you remember when your subscriptions renew or expire.
+Pingo helps you remember when your subscriptions renew or expire.
 
 ## What we store
 - Your email address (to sign you in and send reminders).

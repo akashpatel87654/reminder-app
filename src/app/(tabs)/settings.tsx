@@ -40,7 +40,7 @@ export default function Settings() {
 
   async function exportCsv() {
     try {
-      await Share.share({ title: 'subtrack-export.csv', message: toCsv(subs) });
+      await Share.share({ title: 'pingo-export.csv', message: toCsv(subs) });
     } catch {
       toast('export failed. try again');
     }
@@ -119,7 +119,7 @@ export default function Settings() {
           {({ pressed }) => <T w={800} size={16} color={pressed ? C.white : C.redInk}>delete account</T>}
         </Pressable>
       </Rise>
-      <T mono size={11} style={{ marginTop: 22, textAlign: 'center' }}>SubTrack v1.0 · made w/ ♥ & mild money anxiety</T>
+      <T mono size={11} style={{ marginTop: 22, textAlign: 'center' }}>Pingo v1.0 · made w/ ♥ & mild money anxiety</T>
 
       <NotifOffSheet visible={sheet} onClose={() => setSheet(false)} />
       <Confirm visible={confirm} title="nuke your account?" body="every sub, reminder and setting gets deleted forever. fr fr no undo." yes="delete it all"

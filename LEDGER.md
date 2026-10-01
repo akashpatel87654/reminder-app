@@ -1,6 +1,6 @@
 # Ledger
 
-Work log for SubTrack. One line per task; decisions and known gaps below.
+Work log for Pingo (named SubTrack until 2026-10-01). One line per task; decisions and known gaps below.
 
 | Task | Status | Commit | Notes |
 |------|--------|--------|-------|
@@ -26,6 +26,8 @@ Work log for SubTrack. One line per task; decisions and known gaps below.
 | D6 Android run | done | — | Native debug build on Android 15 emulator (Pixel 7). Verified: splash, onboarding, code login, ask-first sheet → system prompt → granted, reminder notification posted, swipe row → delete via confirm modal (gone from DB), add form. Fixed 3 Android bugs: keyboard covered login field (decoration folds away while typing; `behavior="padding"` on both platforms), Android 13+ reports notification permission `denied` before first ask (now treated as not-asked when it can still ask — was showing a false "notifs are off" banner and skipping the ask sheet), form content ran under the status bar. Keyboard + status-bar fixes re-checked on iOS with the on-screen keyboard |
 
 | D7 Accessibility pass | done | e605519..01ffb91 | Contrast: 4 text colours failed WCAG AA (worst 2.6:1) → all ≥4.5:1 (`red`, `redInk`, new `blueBtn`, `placeholder` tokens). Touch targets: small chips/toggles/links padded to 44pt via hitSlop. Screen readers: row actions (Cancel/Delete) instead of swipe, summary labels, headers, announced toasts, decoration hidden. Reduce Motion honoured (verified by frame diff on/off). Large text: capped scaling on display type, login/home cards reflow (checked at largest iOS size) |
+
+| D8 Rename to Pingo | done | — | App renamed SubTrack → Pingo (name, slug, scheme `pingo`, bundle/package `com.akashpatel.pingo`, all copy, emails, CSV filename). New mark: lime P on ink tile with a pink "ping" dot (`scripts/make_icons.py` regenerates all icons; splash dot pulses). Applied migrations left untouched. Expo Go's loading card shows its own cached icon — real builds use the new one |
 
 ## Decisions
 - Defaults for open questions: login + email (as spec), iOS + Android, INR default with per-sub currency.
