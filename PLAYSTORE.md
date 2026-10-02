@@ -8,9 +8,9 @@ Everything below is ready to copy into **Play Console**. Character limits are Pl
 
 | Item | Value |
 |---|---|
-| App bundle | `dist/pingo-1.0.0-1.aab` (build with `scripts/build_aab.sh`) |
+| App bundle | `dist/pingo-1.0.0-2.aab` (build with `scripts/build_aab.sh`) |
 | Package name | `com.akashpatel.pingo` |
-| Version | `1.0.0` (versionCode `1`) — bump both in `app.json` for every new upload |
+| Version | `1.0.0` (versionCode `2`) — bump both in `app.json` for every new upload |
 | App signing | Use **Play App Signing** (Google holds the app key). This bundle is signed with your **upload key**: `~/.pingo/pingo-upload.jks` |
 | Upload key SHA-256 | `A1:DD:29:DA:DC:47:A4:95:81:39:E4:94:44:DE:35:41:F3:81:1F:8F:21:69:44:74:EB:EE:37:E8:C5:BC:02:E9` |
 
@@ -201,7 +201,7 @@ Pingo asks for **notifications** only (Android 13+ prompt). No sensitive permiss
 
 New personal developer accounts must run a **closed test with at least 12 testers for 14 days** before they can publish to production.
 
-1. Testing → **Closed testing** → create track → upload `dist/pingo-1.0.0-1.aab`.
+1. Testing → **Closed testing** → create track → upload `dist/pingo-1.0.0-2.aab`.
 2. Add testers (a Google Group or a list of Gmail addresses) — at least 12.
 3. Share the opt-in link; testers install from Play and keep it for 14 days.
 4. Then **Production** → promote the same release → submit for review.
