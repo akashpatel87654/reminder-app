@@ -1,0 +1,55 @@
+/* Pingo legal pages — same look as the app: cream paper, ink borders, hard shadows. */
+:root {
+  --ink: #141414; --cream: #FFF8EC; --lime: #C6F432; --pink: #FF7AC6; --muted: #4a4a4a; --card: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ink: #F4F0E6; --cream: #141414; --card: #1E1E1E; --muted: #BDBDBD; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--cream); color: var(--ink);
+  font: 17px/1.6 'Bricolage Grotesque', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--pink); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+header { border-bottom: 2.5px solid var(--ink); }
+header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; text-decoration: none; }
+.mark { position: relative; width: 36px; height: 36px; border-radius: 10px; background: #141414; color: #C6F432;
+  display: grid; place-items: center; font-weight: 800; font-size: 22px; border: 2px solid var(--ink); }
+.mark::after { content: ''; position: absolute; top: -5px; right: -5px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--pink); border: 2px solid #141414; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { font: 500 14px/1 'DM Mono', ui-monospace, Menlo, monospace; text-decoration: none; padding: 9px 12px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--card); }
+nav a[aria-current="page"] { background: var(--lime); color: #141414; }
+
+main { padding: 36px 0 56px; }
+.eyebrow { font: 500 13px/1 'DM Mono', ui-monospace, Menlo, monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(36px, 7vw, 52px); line-height: 1.02; letter-spacing: -1.5px; margin: 10px 0 8px; }
+.updated { font: 14px 'DM Mono', ui-monospace, Menlo, monospace; color: var(--muted); }
+h2 { font-size: 24px; letter-spacing: -0.5px; margin: 40px 0 8px; scroll-margin-top: 16px; }
+h2 a.anchor { text-decoration: none; opacity: 0; margin-left: 6px; }
+h2:hover a.anchor { opacity: .5; }
+p, li { color: var(--ink); }
+ul { padding-left: 22px; }
+li { margin: 6px 0; }
+.card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); padding: 18px 22px; margin: 24px 0; }
+.card.lime { background: var(--lime); color: #141414; box-shadow: 5px 5px 0 #141414; border-color: #141414; }
+.card.lime p, .card.lime li { color: #141414; }
+.card h2 { margin-top: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 2px dashed color-mix(in srgb, var(--ink) 25%, transparent); vertical-align: top; }
+th { font: 500 12px 'DM Mono', ui-monospace, Menlo, monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.table-scroll { overflow-x: auto; }
+code { font-family: 'DM Mono', ui-monospace, Menlo, monospace; font-size: .9em; }
+
+footer { border-top: 2.5px solid var(--ink); padding: 28px 0 40px; font-size: 15px; }
+footer .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+footer h3 { font: 500 12px 'DM Mono', ui-monospace, Menlo, monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+footer ul { list-style: none; padding: 0; margin: 0; }
+footer li { margin: 4px 0; }
+footer .copy { margin-top: 24px; font: 13px 'DM Mono', ui-monospace, Menlo, monospace; color: var(--muted); }
